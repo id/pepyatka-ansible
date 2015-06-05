@@ -1,5 +1,6 @@
 "use strict";
 
+var fs = require('fs')
 var nodemailer = require('nodemailer')
 {% if pepyatka_mailer_smtp_enabled %}
 var transport = require('nodemailer-smtp-transport')
@@ -31,13 +32,20 @@ exports.getConfig = function() {
     acceptHashedPasswordsOnly: {{ pepyatka_accept_hashed_passwords_only }}
   }
 
+  var defaultStopList = [
+    'anonymous', 'public', 'about', 'signin', 'logout',
+    'signup', 'filter', 'settings', 'account', 'groups',
+    'friends', 'list', 'search', 'summary', 'share', '404',
+    'iphone'
+  ];
+
+  var bannedUsers = fs.readFileSync('config/banlist.txt').toString()
+                      .split("\n")
+                      .filter(function(n) { return n != '' })
+
   config.application = {
-    USERNAME_STOP_LIST: [
-      'anonymous', 'public', 'about', 'signin', 'logout',
-      'signup', 'filter', 'settings', 'account', 'groups',
-      'friends', 'list', 'search', 'summary', 'share', '404',
-      'iphone'
-    ]
+    DEFAULT_STOP_LIST: defaultStopList,
+    USERNAME_STOP_LIST: defaultStopList.concat(bannedUsers)
   }
 
   config.attachments = {
