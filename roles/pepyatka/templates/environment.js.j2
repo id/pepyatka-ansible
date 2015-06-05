@@ -39,7 +39,7 @@ exports.getConfig = function() {
     'iphone'
   ];
 
-  var bannedUsers = fs.readFileSync('config/banlist.txt').toString()
+  var bannedUsers = fs.readFileSync('pepyatka-server/config/banlist.txt').toString()
                       .split("\n")
                       .filter(function(n) { return n != '' })
 

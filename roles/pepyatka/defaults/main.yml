@@ -26,3 +26,4 @@ pepyatka_mailer_smtp_pass: 'password'
 pepyatka_mailer_from_name: 'Pepyatka'
 pepyatka_mailer_from_email: 'mail@pepyatka.com'
 pepyatka_accept_hashed_passwords_only: 'false'
+pepyatka_banlist: ""
