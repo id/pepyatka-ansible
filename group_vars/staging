@@ -28,3 +28,4 @@ pepyatka_lite_hostname: nanopeppa.freefeed.net
 crypto_private_enabled: true
 crypto_private_db_host: staging.cbfyifhnraxi.eu-west-1.rds.amazonaws.com
 crypto_private_db_name: crypto_private
+crypto_private_init_schema: false
