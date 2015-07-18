@@ -1,0 +1,10 @@
+/var/log/cryptoprvt/* {
+  missingok
+  notifempty
+  compress
+  delaycompress
+  sharedscripts
+  postrotate
+  restart cryptoprvt
+  endscript
+}

@@ -1,0 +1,35 @@
+begin;
+
+create table "comments" (
+  "id" serial,
+  "createdAt" timestamp not null default '0001-01-01 00:00:00',
+  "body" text not null,
+  "token" char(50) not null,
+  primary key ("createdAt")
+);
+
+create table "keys" (
+  "Username" varchar(30),
+  "pub_key" text default '' not null,
+  "secret_data" text default '' not null,
+  "write_token" varchar(1024),
+  primary key ("Username")
+);
+
+create table "posts" (
+  "id" serial,
+  "createdAt" timestamp not null default '0001-01-01 00:00:00',
+  "body" text not null,
+  "token" char(50) not null,
+  primary key ("createdAt")
+);
+
+create index on "posts" ("createdAt" );
+create index on  "comments" ("createdAt");
+grant all on keys to {{ crypto_private_db_user }};
+grant all on posts to {{ crypto_private_db_user }};
+grant all on comments to {{ crypto_private_db_user }};
+grant usage, select on sequence posts_id_seq to {{ crypto_private_db_user }};
+grant usage, select on sequence comments_id_seq to {{ crypto_private_db_user }};
+
+commit;

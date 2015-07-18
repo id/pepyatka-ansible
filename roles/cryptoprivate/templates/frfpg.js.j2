@@ -1,0 +1,11 @@
+'use strict';
+(function(){
+ module.exports ={
+		user        : '{{ crypto_private_db_user }}',
+		password    : '{{ crypto_private_db_pass }}',
+		database    : '{{ crypto_private_db_name }}',
+		ssl         : true,
+		host        : '{{ crypto_private_db_host }}',
+		server_port : {{ crypto_private_port }}
+};
+}());

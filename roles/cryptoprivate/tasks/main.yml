@@ -1,0 +1,130 @@
+---
+
+- include: schema.yml
+  when: crypto_private_init_schema == True
+
+- name: Install required packages
+  apt: name={{ item }} state=present
+  with_items:
+    - git
+  tags:
+    - crypto-private
+
+- name: Create service user
+  user:
+    name: "{{ crypto_private_user }}"
+    home: "{{ crypto_private_home_dir }}"
+    createhome: yes
+    system: yes
+  tags:
+    - crypto-private
+
+- name: Check if git repo already exists
+  stat: path={{ crypto_private_home_dir }}/cryptographic-private-grps/.git
+  register: crypto_private_repo_dir
+  tags:
+    - crypto-private
+
+- name: Initial deploy of cryptographic-private-grps
+  become: yes
+  become_user: "{{ crypo_private_user }}"
+  git:
+    repo: "{{ cryptographic_private_grps_repo }}"
+    dest: "{{ crypto_private_home_dir }}/cryptographic-private-grps"
+    version: "{{ cryptographic_private_grps_branch }}"
+  when: not crypto_private_repo_dir.stat.exists
+  register: crypto_private_init
+  tags:
+    - crypto-private
+
+- name: Get cryptographic-private-grps local version
+  command: chdir={{ crypto_private_home_dir }}/cryptographic-private-grps git rev-parse HEAD
+  register: crypto_private_local_version
+  tags:
+    - crypto-private
+
+- name: Fetch cryptographic-private-grps remote
+  become: yes
+  become_user: "{{ crypto_private_user }}"
+  command: chdir={{ crypto_private_home_dir }}/cryptographic-private-grps git fetch origin
+  tags:
+    - crypto-private
+
+- name: Get cryptographic-private-grps version on remote
+  command: chdir={{ crypto_private_home_dir }}/cryptographic-private-grps git rev-parse origin/{{ cryptographic_private_grps_branch }}
+  register: crypto_private_remote_version
+  tags:
+    - crypto-private
+
+- name: Update cryptographic-private-grps
+  become: yes
+  become_user: "{{ crypto_private_user }}"
+  git:
+    repo: "{{ cryptographic_private_grps_repo }}"
+    update: yes
+    dest: "{{ crypto_private_home_dir }}/cryptographic-private-grps"
+    version: "{{ cryptographic_private_grps_branch }}"
+    force: yes
+  register: crypto_private_update_res
+  when: crypto_private_local_version.stdout != crypto_private_remote_version.stdout
+  tags:
+    - crypto-private
+
+- name: Save changelog in a file
+  shell: echo "{{ crypto_private_local_version.stdout }}...{{ crypto_private_remote_version.stdout }}" > /tmp/cryptographic-private-grps-changelog
+  when: crypto_private_local_version.stdout != crypto_private_remote_version.stdout
+  tags:
+    - crypto-private
+
+- name: Fetch cryptographic-private-grps changelog
+  fetch:
+    src=/tmp/cryptographic-private-grps-changelog
+    dest=cryptographic-private-grps-changelog/{{ inventory_hostname }}
+    flat=yes
+  when: crypto_private_local_version.stdout != crypto_private_remote_version.stdout
+  tags:
+    - crypto-private
+
+- name: Deploy cryptographic-private-grps config
+  become: yes
+  become_user: "{{ crypto_private_user }}"
+  template: src=frfpg.js.j2 dest={{ crypto_private_home_dir }}/cryptographic-private-grps/frfpg.js
+  register: crypto_private_config
+  tags:
+    - crypto-private
+
+- name: Install npm packages
+  npm: name={{ item }} state=latest path={{ crypto_private_home_dir }}/cryptographic-private-grps
+  with_items:
+    - openpgp
+    - pg
+  tags:
+    - crypto-private
+
+- name: Deploy upstart config files
+  template: src=cryptoprvt.upstart.j2 dest=/etc/init/cryptoprvt.conf
+  register: upstart_config
+  tags:
+    - crypto-private
+
+- name: Deploy logrotate config
+  copy: src=logrotate dest=/etc/logrotate.d/cryptoprvt
+  tags:
+    - crypto-private
+
+- name: Start cryptoprvt server
+  service: name=cryptoprvt state=started enabled=yes
+  register: start_server
+  tags:
+    - crypto-private
+
+- name: Restart cryptoprvt server
+  service: name=cryptoprvt state=restarted
+  when: (crypto_private_update_res.changed or crypto_private_config.changed or upstart_config.changed) and not start_server.changed
+  tags:
+    - crypto-private
+
+- name: Ensure server is up and running
+  wait_for: host=localhost port={{ crypto_private_port }} timeout=30 state=started
+  tags:
+    - crypto-private

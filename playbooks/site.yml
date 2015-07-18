@@ -29,7 +29,9 @@
 
 - include: elasticsearch.yml
 - include: redis.yml
+- include: postgres.yml
 - include: pepyatka.yml
+- include: cryptoprivate.yml
 - include: nginx.yml
 
 - post_tasks:
