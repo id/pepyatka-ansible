@@ -27,11 +27,11 @@
 
 - name: Initial deploy of cryptographic-private-grps
   become: yes
-  become_user: "{{ crypo_private_user }}"
+  become_user: "{{ crypto_private_user }}"
   git:
-    repo: "{{ cryptographic_private_grps_repo }}"
+    repo: "{{ crypto_private_repo }}"
     dest: "{{ crypto_private_home_dir }}/cryptographic-private-grps"
-    version: "{{ cryptographic_private_grps_branch }}"
+    version: "{{ crypto_private_branch }}"
   when: not crypto_private_repo_dir.stat.exists
   register: crypto_private_init
   tags:
@@ -51,7 +51,7 @@
     - crypto-private
 
 - name: Get cryptographic-private-grps version on remote
-  command: chdir={{ crypto_private_home_dir }}/cryptographic-private-grps git rev-parse origin/{{ cryptographic_private_grps_branch }}
+  command: chdir={{ crypto_private_home_dir }}/cryptographic-private-grps git rev-parse origin/{{ crypto_private_branch }}
   register: crypto_private_remote_version
   tags:
     - crypto-private
@@ -60,10 +60,10 @@
   become: yes
   become_user: "{{ crypto_private_user }}"
   git:
-    repo: "{{ cryptographic_private_grps_repo }}"
+    repo: "{{ crypto_private_repo }}"
     update: yes
     dest: "{{ crypto_private_home_dir }}/cryptographic-private-grps"
-    version: "{{ cryptographic_private_grps_branch }}"
+    version: "{{ crypto_private_branch }}"
     force: yes
   register: crypto_private_update_res
   when: crypto_private_local_version.stdout != crypto_private_remote_version.stdout
@@ -94,6 +94,8 @@
     - crypto-private
 
 - name: Install npm packages
+  become: yes
+  become_user: "{{ crypto_private_user }}"
   npm: name={{ item }} state=latest path={{ crypto_private_home_dir }}/cryptographic-private-grps
   with_items:
     - openpgp
