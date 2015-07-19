@@ -71,15 +71,15 @@
     - crypto-private
 
 - name: Save changelog in a file
-  shell: echo "{{ crypto_private_local_version.stdout }}...{{ crypto_private_remote_version.stdout }}" > /tmp/cryptographic-private-grps-changelog
+  shell: echo "{{ crypto_private_local_version.stdout }}...{{ crypto_private_remote_version.stdout }}" > /tmp/crypto-private-changelog
   when: crypto_private_local_version.stdout != crypto_private_remote_version.stdout
   tags:
     - crypto-private
 
-- name: Fetch cryptographic-private-grps changelog
+- name: Fetch crypto-private changelog
   fetch:
-    src=/tmp/cryptographic-private-grps-changelog
-    dest=cryptographic-private-grps-changelog/{{ inventory_hostname }}
+    src=/tmp/crypto-private-changelog
+    dest=crypto-private-changelog/{{ inventory_hostname }}
     flat=yes
   when: crypto_private_local_version.stdout != crypto_private_remote_version.stdout
   tags:

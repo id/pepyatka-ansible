@@ -58,9 +58,9 @@
 
     - name: Clone cryptographic-private-grps
       git:
-        repo: "{{ cryptographic_private_grps_repo }}"
+        repo: "{{ crypto_private_repo }}"
         dest: /root/cryptographic-private-grps
-        version: "{{ cryptographic_private_grps_branch }}"
+        version: "{{ crypto_private_branch }}"
       when: crypto_private_enabled
       tags:
         - bootstrap

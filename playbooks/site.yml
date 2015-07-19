@@ -6,26 +6,20 @@
   gather_facts: False
   sudo: False
   vars:
-    slack_pre_data: 'payload={"channel": "#deploy", "username": "ansible deploy", "text": "Starting deploy to <{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}|{{ pepyatka_hostname }}>", "icon_emoji": ":ghost:"}'
+    slack_pre_data: 'payload={"text": "Starting deploy to <{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}|{{ pepyatka_hostname }}>"}'
   tasks:
-    - name: Delete saved pepyatka-server and pepyatka-html changelogs
+    - name: Delete saved changelogs
       file: path={{ item }} state=absent
       with_items:
         - pepyatka-server-changelog
         - pepyatka-html-changelog
         - pepyatka-lite-changelog
+        - crypto-private-changelog
       when: slack_notification_url is defined
       tags:
         - changelog
-    - name: Send a notification to Slack
-      uri:
-        method: POST
-        url: "{{ slack_notification_url }}"
-        HEADER_Content-Type: "application/x-www-form-urlencoded"
-        body: "{{ slack_pre_data }}"
-      when: slack_notification_url is defined
-      tags:
-        - slack
+
+    - include: slack.yml message="{{ slack_pre_data }}"
 
 - include: elasticsearch.yml
 - include: redis.yml
@@ -40,7 +34,7 @@
   gather_facts: False
   sudo: False
   vars:
-    slack_post_data: 'payload={"channel": "#deploy", "username": "ansible deploy", "text": "Successfully deployed <{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}|{{ pepyatka_hostname }}>", "icon_emoji": ":ghost:"}'
+    slack_post_data: 'payload={"text": "Successfully deployed <{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}|{{ pepyatka_hostname }}>"}'
   tasks:
     - name: Generate pepyatka-server changelog message for Slack
       shell: echo "Updated pepyatka-server on {{ item | basename }}. <{{ pepyatka_server_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
@@ -51,16 +45,9 @@
       tags:
         - changelog
 
-    - name: Notify Slack about pepyatka-server changes
-      uri:
-        method: POST
-        url: "{{ slack_notification_url }}"
-        HEADER_Content-Type: "application/x-www-form-urlencoded"
-        body: 'payload={"channel": "#deploy", "username": "ansible deploy", "text": "{{ item.stdout }}", "icon_emoji": ":ghost:"}'
+    - include: slack.yml message="{{ item.stdout }}"
       with_items: pepyatka_server_changelog.results
-      when: slack_notification_url is defined and pepyatka_server_changelog.changed
-      tags:
-        - slack
+      when: pepyatka_server_changelog.changed
 
     - name: Generate pepyatka-html changelog message for Slack
       shell: echo "Updated pepyatka-html on {{ item | basename }}. <{{ pepyatka_html_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
@@ -71,16 +58,9 @@
       tags:
         - changelog
 
-    - name: Notify Slack about pepyatka-html changes
-      uri:
-        method: POST
-        url: "{{ slack_notification_url }}"
-        HEADER_Content-Type: "application/x-www-form-urlencoded"
-        body: 'payload={"channel": "#deploy", "username": "ansible deploy", "text": "{{ item.stdout }}", "icon_emoji": ":ghost:"}'
+    - include: slack.yml message="{{ item.stdout }}"
       with_items: pepyatka_html_changelog.results
-      when: slack_notification_url is defined and pepyatka_html_changelog.changed
-      tags:
-        - slack
+      when: pepyatka_html_changelog.changed
 
     - name: Generate pepyatka-lite changelog message for Slack
       shell: echo "Updated pepyatka-lite on {{ item | basename }}. <{{ pepyatka_lite_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
@@ -91,27 +71,25 @@
       tags:
         - changelog
 
-    - name: Notify Slack about pepyatka-lite changes
-      uri:
-        method: POST
-        url: "{{ slack_notification_url }}"
-        HEADER_Content-Type: "application/x-www-form-urlencoded"
-        body: 'payload={"channel": "#deploy", "username": "ansible deploy", "text": "{{ item.stdout }}", "icon_emoji": ":ghost:"}'
+    - include: slack.yml message="{{ item.stdout }}"
       with_items: pepyatka_lite_changelog.results
-      when: slack_notification_url is defined and pepyatka_lite_changelog.changed
-      tags:
-        - slack
+      when: pepyatka_lite_changelog.changed
 
-    - name: Send a generic notification to Slack
-      uri:
-        method: POST
-        url: "{{ slack_notification_url }}"
-        HEADER_Content-Type: "application/x-www-form-urlencoded"
-        body: "{{ slack_post_data }}"
+    - name: Generate crypto-private changelog message for Slack
+      shell: echo "Updated crypto-private on {{ item | basename }}. <{{ crypto_private_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
+      with_fileglob:
+        - crypto-private-changelog/*
+      register: crypto_private_changelog
       when: slack_notification_url is defined
-            and not pepyatka_server_changelog.changed
+      tags:
+        - changelog
+
+    - include: slack.yml message="{{ item.stdout }}"
+      with_items: crypto_private_changelog.results
+      when: crypto_private_changelog.changed
+
+    - include: slack.yml message="{{ slack_post_data }}"
+      when: not pepyatka_server_changelog.changed
             and not pepyatka_html_changelog.changed
             and not pepyatka_lite_changelog.changed
-      tags:
-        - slack
 

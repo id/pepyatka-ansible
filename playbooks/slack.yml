@@ -1,0 +1,9 @@
+- name: Send notification to Slack
+  uri:
+    method: POST
+    url: "{{ slack_notification_url }}"
+    HEADER_Content-Type: "application/x-www-form-urlencoded"
+    body: 'payload={"text": "{{ message }}"}'
+  when: slack_notification_url is defined
+  tags:
+    - slack
