@@ -56,6 +56,15 @@
       tags:
         - bootstrap
 
+    - name: Clone cryptographic-private-grps
+      git:
+        repo: "{{ crypto_private_repo }}"
+        dest: /root/cryptographic-private-grps
+        version: "{{ crypto_private_branch }}"
+      when: crypto_private_enabled
+      tags:
+        - bootstrap
+
     - name: Copy vault password file
       copy: src={{ vault_password_file }} dest=/root/pepyatka.vault
       when: vault_password_file is defined

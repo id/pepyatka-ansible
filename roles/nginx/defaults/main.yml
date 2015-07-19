@@ -15,4 +15,6 @@ nginx_use_proxy_protocol: False
 nginx_proxy_protocol_real_ips: []
 pepyatka_ga_account: "UA-XXXXXX"
 pepyatka_lite_enabled: False
-
+crypto_private_enabled: False
+crypto_private_host: localhost
+crypto_private_port: 3030

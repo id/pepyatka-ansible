@@ -70,11 +70,11 @@
     - pepyatka
     - nginx
 
-- name: Update ga account in index.html
+- name: Update ga account in parser.js
   replace:
-    dest: /var/www/pepyatka-lite/index.htm
-    regexp: "UA.+'"
-    replace: "{{ pepyatka_ga_account }}'"
+    dest: /var/www/pepyatka-lite/parser.js
+    regexp: "UA-0-1"
+    replace: "{{ pepyatka_ga_account }}"
   tags:
     - pepyatka
     - nginx

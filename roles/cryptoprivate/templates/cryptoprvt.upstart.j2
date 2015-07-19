@@ -1,0 +1,26 @@
+# cryptoprvt instance
+#
+
+description "cryptoprvt instance"
+
+start on startup
+start on runlevel [2345]
+stop on runlevel [016]
+
+respawn
+respawn limit 5 30
+
+env NODE_PATH=/usr/lib/node_modules
+env APPLICATION=cryptographic-private-grps/index.js
+env LOG_DIR=/var/log/crypto-private
+
+pre-start script
+    mkdir -p $LOG_DIR
+end script
+
+exec start-stop-daemon --start --chuid {{ crypto_private_user }} --chdir {{ crypto_private_home_dir }} --make-pidfile --pidfile /var/run/cryptoprvt.pid --exec /usr/bin/iojs -- $APPLICATION >> ${LOG_DIR}/stdout.log 2>&1
+
+post-start script
+    echo "Started cryptoprvt"
+end script
+

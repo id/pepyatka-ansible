@@ -25,4 +25,9 @@ pepyatka_lite_enabled: true
 pepyatka_lite_repo: https://github.com/freefeed/freefeed-lite.git
 pepyatka_lite_branch: development
 pepyatka_lite_hostname: nanopeppa.freefeed.net
-
+crypto_private_enabled: true
+crypto_private_repo: https://github.com/freefeed/cryptographic-private-grps.git
+crypto_private_branch: development
+crypto_private_db_host: staging.cbfyifhnraxi.eu-west-1.rds.amazonaws.com
+crypto_private_db_name: crypto_private
+crypto_private_init_schema: false
