@@ -36,9 +36,10 @@ check_repo() {
 SERVER_STATUS=$(check_repo pepyatka-server {{ pepyatka_server_branch }})
 HTML_STATUS=$(check_repo pepyatka-html {{ pepyatka_html_branch }})
 LITE_STATUS=$(check_repo pepyatka-lite {{ pepyatka_lite_branch }})
+CRYPTO_STATUS=$(check_repo cryptographic-private-grps {{ cryptographic_private_grps_branch }})
 ANSIBLE_STATUS=$(check_repo pepyatka-ansible {{ pepyatka_ansible_branch }})
 
-if [ "${SERVER_STATUS}" = updated ] || [ "${HTML_STATUS}" = updated ] || [ "${LITE_STATUS}" = updated ] || [ "${ANSIBLE_STATUS}" = updated ] || [ "${USE_FORCE_LUKE}" = yes ]; then
+if [ "${SERVER_STATUS}" = updated ] || [ "${HTML_STATUS}" = updated ] || [ "${LITE_STATUS}" = updated ] || [ "${CRYPTO_STATUS}" = updated ] || [ "${ANSIBLE_STATUS}" = updated ] || [ "${USE_FORCE_LUKE}" = yes ]; then
     cd pepyatka-ansible >/dev/null
 {% if vault_password_file is defined %}
     ansible-playbook -i {{ pepyatka_deploy_inventory }} playbooks/site.yml --connection=local --vault-password-file=/root/pepyatka.vault &>> $LOG_FILE
