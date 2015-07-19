@@ -4,9 +4,7 @@
   hosts: all
   connection: local
   gather_facts: False
-  sudo: False
-  vars:
-    slack_pre_data: 'payload={"text": "Starting deploy to <{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}|{{ pepyatka_hostname }}>"}'
+  become: False
   tasks:
     - name: Delete saved changelogs
       file: path={{ item }} state=absent
@@ -15,11 +13,15 @@
         - pepyatka-html-changelog
         - pepyatka-lite-changelog
         - crypto-private-changelog
-      when: slack_notification_url is defined
+      when: slack_token is defined
       tags:
         - changelog
 
-    - include: slack.yml message="{{ slack_pre_data }}"
+    - name: Send notification to Slack
+      local_action:
+        module: slack
+        token: "{{ slack_token }}"
+        msg: "Starting deploy to <{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}|{{ pepyatka_hostname }}>"
 
 - include: elasticsearch.yml
 - include: redis.yml
@@ -32,64 +34,55 @@
   hosts: all
   connection: local
   gather_facts: False
-  sudo: False
-  vars:
-    slack_post_data: 'payload={"text": "Successfully deployed <{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}|{{ pepyatka_hostname }}>"}'
+  become: False
   tasks:
-    - name: Generate pepyatka-server changelog message for Slack
-      shell: echo "Updated pepyatka-server on {{ item | basename }}. <{{ pepyatka_server_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
+    - name: Send pepyatka-server changelog to Slack
+      local_action:
+        module: slack
+        token: "{{ slack_token }}"
+        msg: "Updated pepyatka-server on {{ item | basename }}. <{{ pepyatka_server_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
       with_fileglob:
         - pepyatka-server-changelog/*
-      register: pepyatka_server_changelog
-      when: slack_notification_url is defined
+      when: slack_token is defined
       tags:
         - changelog
 
-    - include: slack.yml message="{{ item.stdout }}"
-      with_items: pepyatka_server_changelog.results
-      when: pepyatka_server_changelog.changed
-
-    - name: Generate pepyatka-html changelog message for Slack
-      shell: echo "Updated pepyatka-html on {{ item | basename }}. <{{ pepyatka_html_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
+    - name: Send pepyatka-html changelog to Slack
+      local_action:
+        module: slack
+        token: "{{ slack_token }}"
+        msg: "Updated pepyatka-html on {{ item | basename }}. <{{ pepyatka_html_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
       with_fileglob:
         - pepyatka-html-changelog/*
-      register: pepyatka_html_changelog
-      when: slack_notification_url is defined
+      when: slack_token is defined
       tags:
         - changelog
 
-    - include: slack.yml message="{{ item.stdout }}"
-      with_items: pepyatka_html_changelog.results
-      when: pepyatka_html_changelog.changed
-
-    - name: Generate pepyatka-lite changelog message for Slack
-      shell: echo "Updated pepyatka-lite on {{ item | basename }}. <{{ pepyatka_lite_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
+    - name: Send pepyatka-lite changelog to Slack
+      local_action:
+        module: slack
+        token: "{{ slack_token }}"
+        msg: "Updated pepyatka-lite on {{ item | basename }}. <{{ pepyatka_lite_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
       with_fileglob:
         - pepyatka-lite-changelog/*
-      register: pepyatka_lite_changelog
-      when: slack_notification_url is defined
+      when: slack_token is defined
       tags:
         - changelog
 
-    - include: slack.yml message="{{ item.stdout }}"
-      with_items: pepyatka_lite_changelog.results
-      when: pepyatka_lite_changelog.changed
-
-    - name: Generate crypto-private changelog message for Slack
-      shell: echo "Updated crypto-private on {{ item | basename }}. <{{ crypto_private_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
+    - name: Send crypto-private changelog to Slack
+      local_action:
+        module: slack
+        token: "{{ slack_token }}"
+        msg: "Updated crypto-private on {{ item | basename }}. <{{ crypto_private_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
       with_fileglob:
         - crypto-private-changelog/*
-      register: crypto_private_changelog
-      when: slack_notification_url is defined
+      when: slack_token is defined
       tags:
         - changelog
 
-    - include: slack.yml message="{{ item.stdout }}"
-      with_items: crypto_private_changelog.results
-      when: crypto_private_changelog.changed
-
-    - include: slack.yml message="{{ slack_post_data }}"
-      when: not pepyatka_server_changelog.changed
-            and not pepyatka_html_changelog.changed
-            and not pepyatka_lite_changelog.changed
+    - name: Send notification to Slack
+      local_action:
+        module: slack
+        token: "{{ slack_token }}"
+        msg: "Successfully deployed <{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}|{{ pepyatka_hostname }}>"
 
