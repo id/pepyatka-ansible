@@ -45,10 +45,18 @@ location = /robots.txt {
   access_log off;
 }
 
-location /attachments/ {
-  root {{ pepyatka_files_dir }};
-  expires max;
-  rewrite ^/attachments/(.*)$ /$1 break;
+location /attachments/original/ {
+  if ($request_method !~ ^(GET|HEAD)$ ) {
+    return 405;
+  }
+  rewrite ^/attachments/original/(.*)$ https://{{ pepyatka_media_hostname }}/attachments/$1 permanent;
+}
+
+location /attachments/thumbnails/ {
+  if ($request_method !~ ^(GET|HEAD)$ ) {
+    return 405;
+  }
+  rewrite ^/attachments/(.*)$ https://{{ pepyatka_media_hostname }}/attachments/$1 permanent;
 }
 
 location /files/profilePictures/ {
