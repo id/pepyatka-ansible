@@ -64,8 +64,8 @@ exports.getConfig = function() {
       rootDir: '{{ pepyatka_files_dir }}/', // must have trailing slash
 
       // Parameters for 's3'
-      accessKeyId: '{{ pepyatka_aws_access_key }}',
-      secretAccessKey: '{{ pepyatka_aws_secret_key }}',
+      accessKeyId: {{ pepyatka_aws_access_key }},
+      secretAccessKey: {{ pepyatka_aws_secret_key }},
       bucket: '{{ pepyatka_s3_bucket }}'
     }
   }
