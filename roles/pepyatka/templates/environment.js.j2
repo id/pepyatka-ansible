@@ -53,7 +53,7 @@ exports.getConfig = function() {
 
   config.media = {
     // Public URL prefix
-    url: config.host + '/', // must have trailing slash
+    url: '{{ pepyatka_frontend_scheme }}://{{ pepyatka_media_hostname }}/', // must have trailing slash
 
     // File storage
     storage: {
