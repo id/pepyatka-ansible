@@ -30,6 +30,7 @@ location = /robots.txt {
   access_log off;
 }
 
+# These rewrites are for old pre-S3 urls
 location /attachments/original/ {
   if ($request_method !~ ^(GET|HEAD)$ ) {
     return 405;
