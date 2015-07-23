@@ -241,6 +241,12 @@
     - pepyatka
     - nginx
 
+- name: Deploy nginx ssl config
+  template: src=pepyatka-ssl.conf.j2 dest=/etc/nginx/pepyatka-ssl.conf
+  tags:
+    - pepyatka
+    - nginx
+
 - name: Deploy dhparams.pem
   copy: content="{{ nginx_ssl_dhparam }}" dest=/etc/ssl/dhparams.pem
   when: nginx_ssl_dhparam is defined
