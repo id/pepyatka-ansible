@@ -33,7 +33,7 @@ exports.getConfig = function() {
     logLevel: 'warn'
   }
 
-  config.host = '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}:' + config.port
+  config.host = '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}'
 
   var defaultStopList = [
     'anonymous', 'public', 'about', 'signin', 'logout',
