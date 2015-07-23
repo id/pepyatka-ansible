@@ -11,6 +11,7 @@ pepyatka_html_branch: whitelabel
 pepyatka_ansible_repo: https://github.com/freefeed/freefeed-ansible.git
 pepyatka_ansible_branch: development
 pepyatka_redis_host: pepyatka-micro.gfaoo9.0001.euw1.cache.amazonaws.com
+pepyatka_storage_type: s3
 pepyatka_files_dir: /var/pepyatka-files
 pepyatka_file_size_limit: '50mb'
 nginx_client_max_body_size: '50M'
