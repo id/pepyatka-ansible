@@ -10,6 +10,7 @@
 [all:vars]
 ansible_ssh_user=<ubuntu or root>
 pepyatka_hostname=<your server ip/hostname>
+pepyatka_media_hostname=<your media server ip/hostname>
 pepyatka_deploy_inventory=dev
 pepyatka_ansible_repo=https://github.com/pepyatka/pepyatka-ansible.git
 pepyatka_ansible_branch=master
