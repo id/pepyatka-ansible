@@ -48,13 +48,13 @@ location = /robots.txt {
 location /attachments/ {
   root {{ pepyatka_files_dir }};
   expires max;
-  rewrite ^/attachments/(.*)$ /$1 break;
+  rewrite ^/(.*)$ /$1 break;
 }
 
-location /files/profilePictures/ {
+location /profilepics/ {
   root {{ pepyatka_files_dir }};
   expires max;
-  rewrite ^/files/(.*)$ /$1 break;
+  rewrite ^/(.*)$ /$1 break;
 }
 
 {% if nginx_restrict_users_ip is defined %}

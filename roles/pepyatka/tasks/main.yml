@@ -113,9 +113,8 @@
     state: directory
     owner: "{{ pepyatka_user }}"
   with_items:
-    - original
-    - thumbnails
-    - profilePictures
+    - attachments/thumbnails
+    - profilepics
   tags:
     - pepyatka
 
