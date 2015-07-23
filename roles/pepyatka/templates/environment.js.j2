@@ -33,11 +33,13 @@ exports.getConfig = function() {
     logLevel: 'warn'
   }
 
+  config.host = '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}:' + config.port
+
   var defaultStopList = [
     'anonymous', 'public', 'about', 'signin', 'logout',
     'signup', 'filter', 'settings', 'account', 'groups',
     'friends', 'list', 'search', 'summary', 'share', '404',
-    'iphone'
+    'iphone', 'attachments', 'files', 'profilepics'
   ];
 
   var bannedUsers = fs.readFileSync('pepyatka-server/config/banlist.txt').toString()
@@ -49,21 +51,43 @@ exports.getConfig = function() {
     USERNAME_STOP_LIST: defaultStopList.concat(bannedUsers)
   }
 
-  config.attachments = {
-    // Make sure that all directories here have a trailing slash
-    urlDir: '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname}}/attachments/original/',
-    fsDir: '{{ pepyatka_files_dir }}/original/',
-    fileSizeLimit: '{{ pepyatka_file_size_limit }}',
+  config.media = {
+    // Public URL prefix
+    url: config.host + '/', // must have trailing slash
 
-    thumbnails: {
-      urlDir: '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname}}/attachments/thumbnails/',
-      fsDir: '{{ pepyatka_files_dir }}/thumbnails/'
+    // File storage
+    storage: {
+      // 'fs' for local file system or 's3' for AWS S3
+      type: '{{ pepyatka_storage_type }}',
+
+      // Parameters for 'fs'
+      rootDir: '{{ pepyatka_files_dir }}/', // must have trailing slash
+
+      // Parameters for 's3'
+      accessKeyId: '{{ pepyatka_aws_access_key }}',
+      secretAccessKey: '{{ pepyatka_aws_secret_key }}',
+      bucket: '{{ pepyatka_s3_bucket }}'
     }
   }
-
+  config.attachments = {
+    url: config.media.url,
+    storage: config.media.storage,
+    path: 'attachments/', // must have trailing slash
+    fileSizeLimit: '{{ pepyatka_file_size_limit }}'
+  }
+  config.thumbnails = {
+    url: config.media.url,
+    storage: config.media.storage,
+    path: 'attachments/thumbnails/' // must have trailing slash
+  }
   config.profilePictures = {
-    urlDir: '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname}}/files/profilePictures/',
-    fsDir: '{{ pepyatka_files_dir }}/profilePictures/'
+    // Profile pictures only support 'fs' for the time being, so we won't use shared values by default
+    url: config.host + '/',
+    storage: {
+      type: 'fs',
+      rootDir: config.media.storage.rootDir
+    },
+    path: 'profilepics/' // must have trailing slash
   }
 
   config.mailer = {

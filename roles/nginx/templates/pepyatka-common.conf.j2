@@ -59,10 +59,10 @@ location /attachments/thumbnails/ {
   rewrite ^/attachments/(.*)$ https://{{ pepyatka_media_hostname }}/attachments/$1 permanent;
 }
 
-location /files/profilePictures/ {
+location /profilepics/ {
   root {{ pepyatka_files_dir }};
   expires max;
-  rewrite ^/files/(.*)$ /$1 break;
+  try_files $uri =404;
 }
 
 {% if nginx_restrict_users_ip is defined %}
