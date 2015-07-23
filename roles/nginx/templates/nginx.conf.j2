@@ -85,6 +85,8 @@ http {
           return 405;
         }
         proxy_pass https://{{ pepyatka_s3_bucket }}.s3.amazonaws.com;
+        add_header Access-Control-Allow-Origin '*' always;
+        add_header Access-Control-Allow-Methods 'GET,HEAD' always;
       }
     }
     server {
