@@ -10,7 +10,11 @@ pepyatka_server_instances:
 pepyatka_hostname: localhost
 pepyatka_origin: '*'
 pepyatka_home_dir: /opt/pepyatka
+pepyatka_storage_type: fs
 pepyatka_files_dir: /var/pepyatka-files
+pepyatka_aws_access_key: "null"
+pepyatka_aws_secret_key: "null"
+pepyatka_s3_bucket: ""
 pepyatka_file_size_limit: '10mb'
 pepyatka_node_env: development
 pepyatka_secret: 'secret'

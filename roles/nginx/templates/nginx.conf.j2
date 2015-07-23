@@ -75,6 +75,15 @@ http {
 {% endif %}
 
     server {
+      server_name {{ pepyatka_media_hostname }};
+      location /attachments/ {
+        if ($request_method !~ ^(GET|HEAD)$ ) {
+          return 405;
+        }
+        rewrite ^ https://{{ pepyatka_s3_bucket }}.s3.amazonaws.com break;
+      }
+    }
+    server {
       server_name {{ pepyatka_hostname }};
       include pepyatka-common.conf;
 

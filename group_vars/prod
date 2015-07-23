@@ -3,6 +3,7 @@
 ansible_ssh_user: ubuntu
 pepyatka_service_name: FreeFeed
 pepyatka_hostname: freefeed.net
+pepyatka_media_hostname: media.freefeed.net
 pepyatka_origin: freefeed.net
 pepyatka_server_repo: https://github.com/freefeed/freefeed-server.git
 pepyatka_server_branch: release
