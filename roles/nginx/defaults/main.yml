@@ -10,6 +10,7 @@ pepyatka_server_instances:
   - 3000
 pepyatka_frontend_scheme: http
 pepyatka_files_dir: /var/pepyatka-files
+pepyatka_s3_bucket: ""
 nginx_client_max_body_size: '10M'
 nginx_use_proxy_protocol: False
 nginx_proxy_protocol_real_ips: []
