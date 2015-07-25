@@ -7,7 +7,7 @@ pepyatka_media_hostname: micropeppa-media.freefeed.net
 pepyatka_server_repo: https://github.com/freefeed/freefeed-server.git
 pepyatka_server_branch: development
 pepyatka_html_repo: https://github.com/freefeed/freefeed-html.git
-pepyatka_html_branch: whitelabel
+pepyatka_html_branch: temp-enable-signup
 pepyatka_ansible_repo: https://github.com/freefeed/freefeed-ansible.git
 pepyatka_ansible_branch: development
 pepyatka_redis_host: pepyatka-micro.gfaoo9.0001.euw1.cache.amazonaws.com
