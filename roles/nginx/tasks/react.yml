@@ -44,11 +44,14 @@
     flat=yes
   when: freefeed_html_react_local_version.stdout != freefeed_html_react_remote_version.stdout
 
-- name: Fix server name in src/actions/auth.jsx
+- name: Put correct value in API_HOST
   replace:
-    dest: /var/www/freefeed-html-react/src/actions/auth.jsx
+    dest: "/var/www/freefeed-html-react/src/actions/{{ item }}.jsx"
     regexp: "const API_HOST =.*"
     replace: "const API_HOST = '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}'"
+  with_items:
+    - auth
+    - posts
 
 - name: Update service name in public/index.html
   replace:
