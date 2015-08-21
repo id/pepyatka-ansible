@@ -59,12 +59,12 @@
       tags:
         - bootstrap
 
-    - name: Clone cryptographic-private-grps
+    - name: Clone freefeed-html-react
       git:
-        repo: "{{ crypto_private_repo }}"
-        dest: /root/cryptographic-private-grps
-        version: "{{ crypto_private_branch }}"
-      when: crypto_private_enabled
+        repo: "{{ freefeed_html_react_repo }}"
+        dest: /root/freefeed-html-react
+        version: "{{ freefeed_html_react_branch }}"
+      when: freefeed_html_react_enabled
       tags:
         - bootstrap
 

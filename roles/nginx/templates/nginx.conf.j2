@@ -53,12 +53,6 @@ http {
 {% endfor %}
     }
 
-{% if crypto_private_enabled %}
-    upstream crypto_private {
-      server {{ crypto_private_host }}:{{ crypto_private_port }};
-    }
-{% endif %}
-
 {% if server_cert is defined %}
     server {
       listen         80 {{ nginx_use_proxy_protocol | ternary('proxy_protocol', '') }};
