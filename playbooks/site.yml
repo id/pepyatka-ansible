@@ -12,7 +12,7 @@
         - pepyatka-server-changelog
         - pepyatka-html-changelog
         - pepyatka-lite-changelog
-        - crypto-private-changelog
+        - freefeed-html-react-changelog
       when: slack_token is defined
       tags:
         - changelog
@@ -27,7 +27,6 @@
 - include: redis.yml
 - include: postgres.yml
 - include: pepyatka.yml
-- include: cryptoprivate.yml
 - include: nginx.yml
 
 - post_tasks:
@@ -69,13 +68,13 @@
       tags:
         - changelog
 
-    - name: Send crypto-private changelog to Slack
+    - name: Send freefeed-html-react changelog to Slack
       local_action:
         module: slack
         token: "{{ slack_token }}"
-        msg: "Updated crypto-private on {{ item | basename }}. <{{ crypto_private_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
+        msg: "Updated freefeed-html-react on {{ item | basename }}. <{{ freefeed_html_react_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
       with_fileglob:
-        - crypto-private-changelog/*
+        - freefeed-html-react-changelog/*
       when: slack_token is defined
       tags:
         - changelog
