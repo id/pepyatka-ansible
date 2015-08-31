@@ -60,7 +60,6 @@
 
 - name: Install freefeed-html-react dependencies
   npm: path=/var/www/freefeed-html-react state=latest
-  when: freefeed_html_react.changed or freefeed_html_react_init.changed
 
 - name: Install gulp globally
   npm: name=gulp state=latest global=yes
