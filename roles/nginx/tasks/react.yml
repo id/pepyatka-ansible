@@ -58,6 +58,10 @@
     regexp: "Reactive Pepyatka"
     replace: "{{ pepyatka_service_name }}"
 
+- name: Kill local node_modules
+  file: path=/var/www/freefeed-html-react/node_modules state=absent
+  when: freefeed_html_react | changed
+
 - name: Install freefeed-html-react dependencies
   npm: path=/var/www/freefeed-html-react state=latest
 
