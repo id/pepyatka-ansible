@@ -15,6 +15,7 @@ env NODE_ENV={{ pepyatka_node_env }}
 env PEPYATKA_SERVER_PORT={{ item }}
 env APPLICATION=pepyatka-server/index.js
 env LOG_DIR=/var/log/pepyatka
+env MONITOR_PREFIX={{ pepyatka_statsd_prefix }}
 
 pre-start script
     mkdir -p $LOG_DIR
