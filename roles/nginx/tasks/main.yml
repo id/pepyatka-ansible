@@ -112,6 +112,18 @@
     - pepyatka
     - nginx
 
+- name: Update server url in public/js/bookmarklet*.js
+  replace:
+    dest: "/var/www/pepyatka-html/public/js/{{ item }}"
+    regexp: "http://localhost:3333"
+    replace: "{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}"
+  with_items:
+    - bookmarklet.js
+    - bookmarklet.min.js
+  tags:
+    - pepyatka
+    - nginx
+
 - name: Install jake
   npm: name=jake global=yes state=latest
   tags:
