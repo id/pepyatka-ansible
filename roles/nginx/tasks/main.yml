@@ -93,16 +93,6 @@
     - pepyatka
     - nginx
 
-- name: Update service name in public/index.html
-  replace:
-    dest: /var/www/pepyatka-html/public/index.html
-    regexp: "Pepyatka"
-    replace: "{{ pepyatka_service_name }}"
-  when: pepyatka_html.changed
-  tags:
-    - pepyatka
-    - nginx
-
 - name: Update ga account in public/index.html
   replace:
     dest: /var/www/pepyatka-html/public/index.html
@@ -120,6 +110,23 @@
   with_items:
     - bookmarklet.js
     - bookmarklet.min.js
+  tags:
+    - pepyatka
+    - nginx
+
+- name: Read bookmarklet.min.js
+  shell: cat /var/www/pepyatka-html/public/js/bookmarklet.min.js
+  register: bookmarklet_min_js_content
+  changed_when: false
+  tags:
+    - pepyatka
+    - nginx
+
+- name: Populate BOOKMARKLET_PLACEHOLDER
+  replace:
+    dest: /var/www/pepyatka-html/public/js/app/layouts/authorizedLayout.handlebars
+    regexp: "BOOKMARKLET_PLACEHOLDER"
+    replace: "{{ bookmarklet_min_js_content.stdout }}"
   tags:
     - pepyatka
     - nginx
