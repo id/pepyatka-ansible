@@ -39,6 +39,6 @@ nginx_restrict_users_ip: 136.243.23.88
 nginx_use_proxy_protocol: True
 nginx_proxy_protocol_real_ips:
   - 172.31.0.0/16
-crypto_private_repo: https://github.com/freefeed/cryptographic-private-grps.git
-crypto_private_branch: master
-crypto_private_enabled: false
+freefeed_html_react_enabled: False
+freefeed_html_react_repo: https://github.com/freefeed/freefeed-html-react.git
+freefeed_html_react_branch: master
