@@ -106,6 +106,7 @@ http {
         root /var/www/pepyatka-html/public;
         access_log off;
         expires off;
+        add_header Access-Control-Allow-Origin '*' always;
         try_files $uri $uri/ /index.html?/$request_uri;
       }
     }
