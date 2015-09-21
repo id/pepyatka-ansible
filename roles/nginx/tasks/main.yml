@@ -96,7 +96,7 @@
   replace:
     dest: /var/www/pepyatka-html/public/js/config.js
     regexp: "cookieDomain:.*"
-    replace: "cookieDomain: '{{ pepyatka_auth_cookie_domain }}'"
+    replace: "cookieDomain: '{{ pepyatka_auth_cookie_domain }}',"
   tags:
     - pepyatka
     - nginx
