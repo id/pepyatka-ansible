@@ -1,81 +1,93 @@
 ---
 
-- name: Check if freefeed-html-react repo already exists
-  stat: path=/var/www/freefeed-html-react/.git
-  register: freefeed_html_react_dir
+- name: Check if freefeed-react-client repo already exists
+  stat: path=/var/www/freefeed-react-client/.git
+  register: freefeed_react_client_dir
 
-- name: Initial deploy of freefeed-html-react
+- name: Initial deploy of freefeed-react-client
   git:
-    repo: "{{ freefeed_html_react_repo }}"
-    dest: /var/www/freefeed-html-react
-    version: "{{ freefeed_html_react_branch }}"
-  when: not freefeed_html_react_dir.stat.exists
-  register: freefeed_html_react_init
+    repo: "{{ freefeed_react_client_repo }}"
+    dest: /var/www/freefeed-react-client
+    version: "{{ freefeed_react_client_branch }}"
+  when: not freefeed_react_client_dir.stat.exists
+  register: freefeed_react_client_init
 
-- name: Get freefeed-html-react local version
-  command: chdir=/var/www/freefeed-html-react git rev-parse HEAD
-  register: freefeed_html_react_local_version
+- name: Get freefeed-react-client local version
+  command: chdir=/var/www/freefeed-react-client git rev-parse HEAD
+  register: freefeed_react_client_local_version
 
-- name: Fetch freefeed-html-react remote
-  command: chdir=/var/www/freefeed-html-react git fetch origin
+- name: Fetch freefeed-react-client remote
+  command: chdir=/var/www/freefeed-react-client git fetch origin
 
-- name: Get freefeed-html-react version on remote
-  command: chdir=/var/www/freefeed-html-react git rev-parse origin/{{ freefeed_html_react_branch }}
-  register: freefeed_html_react_remote_version
+- name: Get freefeed-react-client version on remote
+  command: chdir=/var/www/freefeed-react-client git rev-parse origin/{{ freefeed_react_client_branch }}
+  register: freefeed_react_client_remote_version
 
-- name: Update freefeed-html-react
+- name: Update freefeed-react-client
   git:
-    repo: "{{ freefeed_html_react_repo }}"
+    repo: "{{ freefeed_react_client_repo }}"
     update: yes
-    dest: /var/www/freefeed-html-react
-    version: "{{ freefeed_html_react_branch }}"
+    dest: /var/www/freefeed-react-client
+    version: "{{ freefeed_react_client_branch }}"
     force: yes
-  register: freefeed_html_react
-  when: freefeed_html_react_local_version.stdout != freefeed_html_react_remote_version.stdout
+  register: freefeed_react_client
+  when: freefeed_react_client_local_version.stdout != freefeed_react_client_remote_version.stdout
 
 - name: Save changelog in a file
-  shell: echo "{{ freefeed_html_react_local_version.stdout }}...{{ freefeed_html_react_remote_version.stdout }}" > /tmp/freefeed-html-react-changelog
-  when: freefeed_html_react_local_version.stdout != freefeed_html_react_remote_version.stdout
+  shell: echo "{{ freefeed_react_client_local_version.stdout }}...{{ freefeed_react_client_remote_version.stdout }}" > /tmp/freefeed-react-client-changelog
+  when: freefeed_react_client_local_version.stdout != freefeed_react_client_remote_version.stdout
 
-- name: Fetch freefeed-html-react changelog
+- name: Fetch freefeed-react-client changelog
   fetch:
-    src=/tmp/freefeed-html-react-changelog
-    dest=freefeed-html-react-changelog/{{ inventory_hostname }}
+    src=/tmp/freefeed-react-client-changelog
+    dest=freefeed-react-client-changelog/{{ inventory_hostname }}
     flat=yes
-  when: freefeed_html_react_local_version.stdout != freefeed_html_react_remote_version.stdout
+  when: freefeed_react_client_local_version.stdout != freefeed_react_client_remote_version.stdout
 
 - name: Put correct value in API_HOST
   replace:
-    dest: "/var/www/freefeed-html-react/src/{{ item }}.jsx"
+    dest: "/var/www/freefeed-react-client/src/services/{{ item }}.js"
     regexp: "const API_HOST =.*"
     replace: "const API_HOST = '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}'"
   with_items:
     - api
 
-- name: Update service name in public/index.html
+- name: Update service name in index.jade
   replace:
-    dest: /var/www/freefeed-html-react/public/index.html
+    dest: /var/www/freefeed-react-client/index.jade
     regexp: "Reactive Pepyatka"
     replace: "{{ pepyatka_service_name }}"
 
+- name: Update cookie domain in src/config.js
+  replace:
+    dest: /var/www/freefeed-react-client/src/config.js
+    regexp: "cookieDomain.*"
+    replace: "cookieDomain: '{{ pepyatka_auth_cookie_domain }}',"
+
+- name: Update tokenPrefix in src/config.js
+  replace:
+    dest: /var/www/freefeed-react-client/src/config.js
+    regexp: "tokenPrefix:.*"
+    replace: "tokenPrefix: '{{ pepyatka_auth_token_prefix }}'"
+
+- name: Install webpack globally
+  npm: name=webpack state=latest global=yes
+
 - name: Kill local node_modules
-  file: path=/var/www/freefeed-html-react/node_modules state=absent
-  when: freefeed_html_react | changed
+  file: path=/var/www/freefeed-react-client/node_modules state=absent
+  when: freefeed_react_client | changed
 
-- name: Install freefeed-html-react dependencies
-  npm: path=/var/www/freefeed-html-react state=latest
-
-- name: Install gulp globally
-  npm: name=gulp state=latest global=yes
+- name: Install freefeed-react-client dependencies
+  npm: path=/var/www/freefeed-react-client state=latest
 
 - name: Build assets
-  command: gulp build
+  command: make prod out_dir=/var/www/freefeed-react-client/public
   args:
-    chdir: /var/www/freefeed-html-react
+    chdir: /var/www/freefeed-react-client
 
-- name: Fix freefeed-html-react permissions
+- name: Fix freefeed-react-client permissions
   file:
-    path: /var/www/freefeed-html-react
+    path: /var/www/freefeed-react-client
     owner: "{{ www_user }}"
     group: "{{ www_group }}"
     state: directory

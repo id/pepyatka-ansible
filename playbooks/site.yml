@@ -12,7 +12,7 @@
         - pepyatka-server-changelog
         - pepyatka-html-changelog
         - pepyatka-lite-changelog
-        - freefeed-html-react-changelog
+        - freefeed-react-client-changelog
       when: slack_token is defined
       tags:
         - changelog
@@ -68,13 +68,13 @@
       tags:
         - changelog
 
-    - name: Send freefeed-html-react changelog to Slack
+    - name: Send freefeed-react-client changelog to Slack
       local_action:
         module: slack
         token: "{{ slack_token }}"
-        msg: "Updated freefeed-html-react on {{ item | basename }}. <{{ freefeed_html_react_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
+        msg: "Updated freefeed-react-client on {{ item | basename }}. <{{ freefeed_react_client_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
       with_fileglob:
-        - freefeed-html-react-changelog/*
+        - freefeed-react-client-changelog/*
       when: slack_token is defined
       tags:
         - changelog
