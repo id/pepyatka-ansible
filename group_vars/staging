@@ -29,9 +29,9 @@ pepyatka_lite_enabled: true
 pepyatka_lite_repo: https://github.com/freefeed/freefeed-lite.git
 pepyatka_lite_branch: development
 pepyatka_lite_hostname: nanopeppa.freefeed.net
-freefeed_html_react_enabled: true
-freefeed_html_react_repo: https://github.com/freefeed/freefeed-html-react.git
-freefeed_html_react_branch: master
-freefeed_html_react_hostname: george.freefeed.net
+freefeed_react_client_enabled: true
+freefeed_react_client_repo: https://github.com/freefeed/freefeed-react-client.git
+freefeed_react_client_branch: master
+freefeed_react_client_hostname: george.freefeed.net
 pepyatka_auth_cookie_domain: freefeed.net
 pepyatka_auth_token_prefix: micropeppa_

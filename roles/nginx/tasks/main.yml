@@ -224,9 +224,9 @@
     - nginx
 
 - include: react.yml
-  when: freefeed_html_react_enabled
+  when: freefeed_react_client_enabled
   tags:
-    - freefeed_html_react
+    - freefeed_react_client
     - pepyatka
     - nginx
 

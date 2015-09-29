@@ -66,10 +66,10 @@ http {
       return         301 https://$server_name$request_uri;
     }
 {% endif %}
-{% if freefeed_html_react_enabled %}
+{% if freefeed_react_client_enabled %}
     server {
       listen         80 {{ nginx_use_proxy_protocol | ternary('proxy_protocol', '') }};
-      server_name    {{ freefeed_html_react_hostname }};
+      server_name    {{ freefeed_react_client_hostname }};
       return         301 https://$server_name$request_uri;
     }
 {% endif %}
@@ -120,13 +120,13 @@ http {
       }
    }
 {% endif %}
-{% if freefeed_html_react_enabled %}
+{% if freefeed_react_client_enabled %}
    server {
-     server_name {{ freefeed_html_react_hostname }};
+     server_name {{ freefeed_react_client_hostname }};
      include pepyatka-common.conf;
 
      location / {
-       root /var/www/freefeed-html-react/public;
+       root /var/www/freefeed-react-client/public;
        access_log off;
        expires max;
        try_files $uri $uri/ /index.html?/$request_uri;

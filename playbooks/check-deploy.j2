@@ -36,7 +36,7 @@ check_repo() {
 SERVER_STATUS=$(check_repo pepyatka-server {{ pepyatka_server_branch }})
 HTML_STATUS=$(check_repo pepyatka-html {{ pepyatka_html_branch }})
 LITE_STATUS=$(check_repo pepyatka-lite {{ pepyatka_lite_branch }})
-REACT_STATUS=$(check_repo freefeed-html-react {{ freefeed_html_react_branch }})
+REACT_STATUS=$(check_repo freefeed-react-client {{ freefeed_react_client_branch }})
 ANSIBLE_STATUS=$(check_repo pepyatka-ansible {{ pepyatka_ansible_branch }})
 
 if [ "${SERVER_STATUS}" = updated ] || [ "${HTML_STATUS}" = updated ] || [ "${LITE_STATUS}" = updated ] || [ "${REACT_STATUS}" = updated ] || [ "${ANSIBLE_STATUS}" = updated ] || [ "${USE_FORCE_LUKE}" = yes ]; then
