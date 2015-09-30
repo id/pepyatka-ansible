@@ -44,19 +44,17 @@
     flat=yes
   when: freefeed_react_client_local_version.stdout != freefeed_react_client_remote_version.stdout
 
-- name: Put correct value in API_HOST
-  replace:
-    dest: "/var/www/freefeed-react-client/src/services/{{ item }}.js"
-    regexp: "const API_HOST =.*"
-    replace: "const API_HOST = '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}'"
-  with_items:
-    - api
-
 - name: Update service name in index.jade
   replace:
     dest: /var/www/freefeed-react-client/index.jade
     regexp: "Reactive Pepyatka"
     replace: "{{ pepyatka_service_name }}"
+
+- name: Update api.host in src/config.js
+  replace:
+    dest: /var/www/freefeed-react-client/src/config.js
+    regexp: "host:.*"
+    replace: "host: '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}'"
 
 - name: Update cookie domain in src/config.js
   replace:
