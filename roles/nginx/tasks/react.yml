@@ -68,6 +68,12 @@
     regexp: "tokenPrefix:.*"
     replace: "tokenPrefix: '{{ pepyatka_auth_token_prefix }}'"
 
+- name: Update whoAmI cache key in src/config.js
+  replace:
+    dest: /var/www/freefeed-react-client/src/config.js
+    regexp: "userStorageKey.*"
+    replace: "userStorageKey: '{{ pepyatka_local_storage_whoami_cache_key }}',"
+
 - name: Install webpack globally
   npm: name=webpack state=latest global=yes
 
