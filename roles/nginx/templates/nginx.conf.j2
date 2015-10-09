@@ -131,6 +131,9 @@ http {
        expires max;
        try_files $uri $uri/ /index.html?/$request_uri;
      }
+     location /assets/ {
+       try_files $uri =404;
+     }
   }
 {% endif %}
 }
