@@ -132,6 +132,9 @@ http {
        try_files $uri $uri/ /index.html?/$request_uri;
      }
      location ~ ^/assets/ {
+       root /var/www/freefeed-react-client;
+       access_log off;
+       expires max;
        try_files $uri =404;
      }
   }
