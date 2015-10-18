@@ -35,7 +35,6 @@ pepyatka_lite_enabled: true
 pepyatka_lite_repo: https://github.com/freefeed/freefeed-lite.git
 pepyatka_lite_branch: release
 pepyatka_lite_hostname: m.freefeed.net
-nginx_restrict_users_ip: 136.243.23.88
 nginx_use_proxy_protocol: True
 nginx_proxy_protocol_real_ips:
   - 172.31.0.0/16
