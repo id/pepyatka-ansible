@@ -121,22 +121,23 @@ http {
    }
 {% endif %}
 {% if freefeed_react_client_enabled %}
-   server {
-     server_name {{ freefeed_react_client_hostname }};
-     include pepyatka-common.conf;
+    server {
+      server_name {{ freefeed_react_client_hostname }};
+      include pepyatka-ssl.conf;
+      include pepyatka-shared.conf;
 
-     location / {
-       root /var/www/freefeed-react-client/public;
-       access_log off;
-       expires max;
-       try_files $uri $uri/ /index.html?/$request_uri;
-     }
-     location ~ ^/assets/ {
-       root /var/www/freefeed-react-client;
-       access_log off;
-       expires max;
-       try_files $uri =404;
-     }
-  }
+      location / {
+        root /var/www/freefeed-react-client/public;
+        access_log off;
+        expires max;
+        try_files $uri $uri/ /index.html?/$request_uri;
+      }
+      location ~ ^/assets/ {
+        root /var/www/freefeed-react-client/public;
+        access_log off;
+        expires max;
+        try_files $uri =404;
+      }
+    }
 {% endif %}
 }
