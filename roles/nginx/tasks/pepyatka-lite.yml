@@ -71,13 +71,13 @@
     - nginx
 
 - name: Deploy md5 script
-  copy: src=write_hash.sh dest=/var/www/pepyatka-lite/
+  copy: src=write_hash.sh dest=/var/www/pepyatka-lite/ mode=0755
   tags:
     - pepyatka
     - nginx
 
-- name: Update ga account in parser.js
-  command: chdir=/var/www/pepyatka-lite write_hash.sh 
+- name: Append md5 hashes to file urls
+  command: chdir=/var/www/pepyatka-lite ./write_hash.sh
   tags:
     - pepyatka
     - nginx
