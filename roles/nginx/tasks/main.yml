@@ -300,6 +300,12 @@
     - pepyatka
     - nginx
 
+- name: Deploy nginx shared config
+  template: src=pepyatka-shared.conf.j2 dest=/etc/nginx/pepyatka-shared.conf
+  tags:
+    - pepyatka
+    - nginx
+
 - name: Deploy nginx ssl config
   template: src=pepyatka-ssl.conf.j2 dest=/etc/nginx/pepyatka-ssl.conf
   tags:
