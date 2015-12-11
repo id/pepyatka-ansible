@@ -47,3 +47,5 @@ freefeed_react_client_hostname: beta.freefeed.net
 pepyatka_auth_cookie_domain: freefeed.net
 pepyatka_auth_token_prefix: freefeed_
 freefeed_auth_token_prefix: freefeedBETA_
+freefeed_recaptcha_enabled: true
+freefeed_recaptcha_sitekey: 6LdChhITAAAAAGzgvUPPCbg0cxJzcxFc5vlBs9u5

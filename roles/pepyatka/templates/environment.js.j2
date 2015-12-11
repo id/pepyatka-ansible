@@ -31,7 +31,11 @@ exports.getConfig = function() {
     appRoot: '{{ pepyatka_home_dir}}/pepyatka-server',
     acceptHashedPasswordsOnly: {{ pepyatka_accept_hashed_passwords_only }},
     logLevel: 'warn',
-    onboardingUsername: '{{ pepyatka_onboarding_username }}'
+    onboardingUsername: '{{ pepyatka_onboarding_username }}',
+    recaptcha: {
+      enabled: {{ freefeed_recaptcha_enabled }},
+      secret: {{ freefeed_recaptcha_secret }}
+    }
   }
 
   config.host = '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}'

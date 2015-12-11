@@ -74,6 +74,12 @@
     regexp: "userStorageKey.*"
     replace: "userStorageKey: '{{ pepyatka_local_storage_whoami_cache_key }}',"
 
+- name: Update captcha.siteKey in src/config.js
+  replace:
+    dest: /var/www/freefeed-react-client/src/config.js
+    regexp: "siteKey.*"
+    replace: "siteKey: '{{ freefeed_recaptcha_sitekey }}'"
+
 - name: Install webpack globally
   npm: name=webpack state=latest global=yes
 
