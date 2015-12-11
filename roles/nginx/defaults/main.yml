@@ -20,4 +20,4 @@ freefeed_react_client_enabled: False
 freefeed_react_client_repo: https://github.com/freefeed/freefeed-react-client.git
 freefeed_react_client_branch: master
 pepyatka_local_storage_whoami_cache_key: whoamiCache
-
+freefeed_recaptcha_sitekey: ""
