@@ -33,7 +33,7 @@ exports.getConfig = function() {
     logLevel: 'warn',
     onboardingUsername: '{{ pepyatka_onboarding_username }}',
     recaptcha: {
-      enabled: {{ freefeed_recaptcha_enabled }},
+      enabled: {{ freefeed_recaptcha_enabled | string | lower }},
       secret: '{{ freefeed_recaptcha_secret }}'
     }
   }
