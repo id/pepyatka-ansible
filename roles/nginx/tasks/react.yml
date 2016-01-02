@@ -78,7 +78,7 @@
   replace:
     dest: /var/www/freefeed-react-client/src/config.js
     regexp: "siteKey.*"
-    replace: "siteKey: '{{ freefeed_recaptcha_sitekey }}'"
+    replace: "siteKey: '{{ freefeed_recaptcha_sitekey }}',"
 
 - name: Install webpack globally
   npm: name=webpack state=latest global=yes
