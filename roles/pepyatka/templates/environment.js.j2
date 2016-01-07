@@ -47,7 +47,7 @@ exports.getConfig = function() {
     'iphone', 'attachments', 'files', 'profilepics'
   ];
 
-  var bannedUsers = fs.readFileSync('pepyatka-server/config/banlist.txt').toString()
+  var bannedUsers = fs.readFileSync('{{ pepyatka_home_dir }}/pepyatka-server/config/banlist.txt').toString()
                       .split("\n")
                       .filter(function(n) { return n != '' })
 
