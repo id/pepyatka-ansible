@@ -78,7 +78,7 @@
 
 - name: Kill local node_modules
   file: path=/var/www/pepyatka-lite/node_modules state=absent
-  when: pepyatka-lite | changed
+  when: pepyatka_lite | changed
   tags:
     - pepyatka
     - nginx
@@ -89,7 +89,7 @@
     - pepyatka
     - nginx
 
-- name: Build the bundle 
+- name: Build the bundle
   command: chdir=/var/www/pepyatka-lite webpack --config config.js
   tags:
     - pepyatka
