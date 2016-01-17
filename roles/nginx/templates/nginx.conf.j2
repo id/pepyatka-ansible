@@ -126,12 +126,35 @@ http {
       include pepyatka-ssl.conf;
       include pepyatka-shared.conf;
 
+      # Expire rules for static content
+
+      # document html and data
+      location ~* \.(?:html?|xml|json)$ {
+        expires off;
+        access_log off;
+        # access_log logs/static.log; # if you want
+      }
+
+      # Media: images, icons, video, audio, HTC
+      location ~* \.(?:jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc)$ {
+        expires 1M;
+        access_log off;
+        add_header Cache-Control "public";
+      }
+
+      # CSS and Javascript
+      location ~* \.(?:css|js)$ {
+        expires 1y;
+        access_log off;
+        add_header Cache-Control "public";
+      }
+
       location / {
         root /var/www/freefeed-react-client/public;
         access_log off;
-        expires max;
         try_files $uri $uri/ /index.html?/$request_uri;
       }
+
       location ~ ^/assets/ {
         root /var/www/freefeed-react-client/public;
         access_log off;
