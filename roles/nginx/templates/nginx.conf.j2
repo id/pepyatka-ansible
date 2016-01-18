@@ -125,6 +125,7 @@ http {
       server_name {{ freefeed_react_client_hostname }};
       include pepyatka-ssl.conf;
       include pepyatka-shared.conf;
+      root /var/www/freefeed-react-client/public;
 
       # Expire rules for static content
 
@@ -153,13 +154,11 @@ http {
       }
 
       location / {
-        root /var/www/freefeed-react-client/public;
         access_log off;
         try_files $uri $uri/ /index.html?/$request_uri;
       }
 
       location ~ ^/assets/ {
-        root /var/www/freefeed-react-client/public;
         access_log off;
         expires max;
         try_files $uri =404;
