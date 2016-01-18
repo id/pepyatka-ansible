@@ -78,6 +78,9 @@ http {
     server {
       server_name {{ pepyatka_media_hostname }};
       include pepyatka-ssl.conf;
+      location = / {
+        return https://freefeed.net/;
+      }
       location / {
         access_log off;
         log_not_found off;
