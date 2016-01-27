@@ -118,7 +118,7 @@ http {
 
       location / {
         root /var/www/pepyatka-lite;
-        rewrite ^/static/(.*)$ /$1 break;
+        rewrite ^/s/(.*)$ /$1 break;
         rewrite ^.* /index.htm break;
       }
    }
