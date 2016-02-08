@@ -78,6 +78,7 @@
       template: src=check-deploy.j2 dest=/root/check-deploy mode=0700
       tags:
         - bootstrap
+        - check-deploy
 
     - name: Deploy inventory for check-deploy script
       copy: src=../{{ pepyatka_deploy_inventory }} dest=/root/pepyatka-ansible/{{ pepyatka_deploy_inventory }}
