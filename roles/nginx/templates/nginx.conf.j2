@@ -75,6 +75,13 @@ http {
 {% endif %}
 {% endif %}
 
+    # must be first ssl block
+    server {
+      server_name _;
+      include pepyatka-ssl.conf;
+      return 301 $scheme://{{ pepyatka_hostname }}$request_uri;
+    }
+
     server {
       server_name {{ pepyatka_media_hostname }};
       include pepyatka-ssl.conf;
