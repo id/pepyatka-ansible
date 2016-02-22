@@ -10,6 +10,7 @@ pepyatka_ansible_repo: https://github.com/freefeed/freefeed-ansible.git
 pepyatka_lite_repo: https://github.com/freefeed/freefeed-lite.git
 freefeed_react_client_repo: https://github.com/freefeed/freefeed-react-client.git
 
+pepyatka_html_enabled: True
 pepyatka_mailer_smtp_enabled: True
 pepyatka_mailer_from_name: FreeFeed.net
 pepyatka_mailer_from_email: freefeed.net@gmail.com

@@ -47,6 +47,7 @@
         dest: /root/pepyatka-html
         version: "{{ pepyatka_html_branch }}"
         force: yes
+      when: pepyatka_html_enabled
       tags:
         - bootstrap
 
