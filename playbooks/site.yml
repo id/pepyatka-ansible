@@ -17,12 +17,6 @@
       tags:
         - changelog
 
-    - name: Send notification to Slack
-      local_action:
-        module: slack
-        token: "{{ slack_token }}"
-        msg: "Starting deploy to <{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}|{{ pepyatka_hostname }}>"
-
 - include: elasticsearch.yml
 - include: redis.yml
 - include: postgres.yml
@@ -53,7 +47,7 @@
         msg: "Updated pepyatka-html on {{ item | basename }}. <{{ pepyatka_html_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
       with_fileglob:
         - pepyatka-html-changelog/*
-      when: slack_token is defined
+      when: slack_token is defined and pepyatka_html_enabled
       tags:
         - changelog
 
@@ -64,7 +58,7 @@
         msg: "Updated pepyatka-lite on {{ item | basename }}. <{{ pepyatka_lite_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
       with_fileglob:
         - pepyatka-lite-changelog/*
-      when: slack_token is defined
+      when: slack_token is defined and pepyatka_lite_enabled
       tags:
         - changelog
 
@@ -75,13 +69,8 @@
         msg: "Updated freefeed-react-client on {{ item | basename }}. <{{ freefeed_react_client_repo | replace('.git', '')}}/compare/{{ lookup('file', item) }}|Changelog>"
       with_fileglob:
         - freefeed-react-client-changelog/*
-      when: slack_token is defined
+      when: slack_token is defined and freefeed_react_client_enabled
       tags:
         - changelog
 
-    - name: Send notification to Slack
-      local_action:
-        module: slack
-        token: "{{ slack_token }}"
-        msg: "Successfully deployed <{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}|{{ pepyatka_hostname }}>"
 

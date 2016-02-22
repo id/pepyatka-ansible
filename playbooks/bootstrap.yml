@@ -15,6 +15,13 @@
       tags:
         - bootstrap
 
+    - name: Install required python modules
+      pip: name={{ item }} state=latest
+      with_items:
+        - dogapi
+      tags:
+        - bootstrap
+
     - name: Install ansible
       pip: name={{ item }} state=present
       with_items:
