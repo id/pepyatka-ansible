@@ -1,12 +1,14 @@
-[pepyatka]
+[target]
 micropeppa.freefeed.net
 
-[nginx]
-micropeppa.freefeed.net
+[pepyatka:children]
+target
 
-[cryptoprivate]
-micropeppa.freefeed.net
+[nginx:children]
+target
 
-[staging]
-micropeppa.freefeed.net
+[staging:children]
+target
 
+[staging_secrets:children]
+target

@@ -1,13 +1,12 @@
 ---
 
-pepyatka_hostname: micropeppa.freefeed.net
+pepyatka_hostname: candy.freefeed.net
 pepyatka_media_hostname: micropeppa-media.freefeed.net
-pepyatka_statsd_prefix: micropeppa
-pepyatka_deploy_inventory: micropeppa
+pepyatka_statsd_prefix: candy
+pepyatka_deploy_inventory: candy
 pepyatka_lite_enabled: true
 freefeed_react_client_enabled: true
 freefeed_react_client_branch: master
-freefeed_react_client_hostname: george.freefeed.net
+freefeed_react_client_hostname: candy.freefeed.net
 pepyatka_auth_token_prefix: micropeppa_
 freefeed_auth_token_prefix: micropeppaBETA_
-
