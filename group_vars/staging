@@ -1,9 +1,7 @@
 ---
 
 pepyatka_ansible_branch: development
-pepyatka_html_branch: temp-enable-signup
 pepyatka_lite_branch: development
 pepyatka_redis_host: pepyatka-micro.gfaoo9.0001.euw1.cache.amazonaws.com
 pepyatka_s3_bucket: freefeed-storage-test
-pepyatka_lite_hostname: nanopeppa.freefeed.net
 freefeed_recaptcha_enabled: false

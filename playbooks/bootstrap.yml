@@ -19,14 +19,12 @@
       pip: name={{ item }} state=latest
       with_items:
         - dogapi
+        - httplib2
       tags:
         - bootstrap
 
     - name: Install ansible
-      pip: name={{ item }} state=present
-      with_items:
-        - ansible
-        - httplib2
+      pip: name=ansible state=present version=1.9.4
       tags:
         - bootstrap
 

@@ -1,29 +1,4 @@
----
-
-- name: Check if freefeed-react-client repo already exists
-  stat: path=/var/www/freefeed-react-client/.git
-  register: freefeed_react_client_dir
-
-- name: Initial deploy of freefeed-react-client
-  git:
-    repo: "{{ freefeed_react_client_repo }}"
-    dest: /var/www/freefeed-react-client
-    version: "{{ freefeed_react_client_branch }}"
-  when: not freefeed_react_client_dir.stat.exists
-  register: freefeed_react_client_init
-
-- name: Get freefeed-react-client local version
-  command: chdir=/var/www/freefeed-react-client git rev-parse HEAD
-  register: freefeed_react_client_local_version
-
-- name: Fetch freefeed-react-client remote
-  command: chdir=/var/www/freefeed-react-client git fetch origin
-
-- name: Get freefeed-react-client version on remote
-  command: chdir=/var/www/freefeed-react-client git rev-parse origin/{{ freefeed_react_client_branch }}
-  register: freefeed_react_client_remote_version
-
-- name: Update freefeed-react-client
+- name: Deploy freefeed-react-client
   git:
     repo: "{{ freefeed_react_client_repo }}"
     update: yes
@@ -31,18 +6,17 @@
     version: "{{ freefeed_react_client_branch }}"
     force: yes
   register: freefeed_react_client
-  when: freefeed_react_client_local_version.stdout != freefeed_react_client_remote_version.stdout
 
 - name: Save changelog in a file
-  shell: echo "{{ freefeed_react_client_local_version.stdout }}...{{ freefeed_react_client_remote_version.stdout }}" > /tmp/freefeed-react-client-changelog
-  when: freefeed_react_client_local_version.stdout != freefeed_react_client_remote_version.stdout
+  shell: echo "{{ freefeed_react_client.before }}...{{ freefeed_react_client.after }}" > /tmp/freefeed-react-client-changelog
+  when: freefeed_react_client.before != freefeed_react_client.after
 
 - name: Fetch freefeed-react-client changelog
   fetch:
     src=/tmp/freefeed-react-client-changelog
     dest=freefeed-react-client-changelog/{{ inventory_hostname }}
     flat=yes
-  when: freefeed_react_client_local_version.stdout != freefeed_react_client_remote_version.stdout
+  when: freefeed_react_client.before != freefeed_react_client.after
 
 - name: Update service name in index.jade
   replace:
@@ -54,7 +28,7 @@
   replace:
     dest: /var/www/freefeed-react-client/src/config.js
     regexp: "host:.*"
-    replace: "host: '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}',"
+    replace: "host: '{{ pepyatka_frontend_scheme }}://{{ freefeed_react_client_hostname }}',"
 
 - name: Update cookie domain in src/config.js
   replace:
@@ -85,7 +59,7 @@
 
 - name: Kill local node_modules
   file: path=/var/www/freefeed-react-client/node_modules state=absent
-  when: freefeed_react_client | changed
+  when: freefeed_react_client.before != freefeed_react_client.after
 
 - name: Install freefeed-react-client dependencies
   npm: path=/var/www/freefeed-react-client state=latest

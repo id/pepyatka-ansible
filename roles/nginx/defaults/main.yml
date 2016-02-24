@@ -1,10 +1,7 @@
 ---
 
-pepyatka_html_repo: https://github.com/pepyatka/pepyatka-html.git
-pepyatka_html_branch: development
 www_user: www-data
 www_group: www-data
-pepyatka_hostname: localhost
 pepyatka_server_host: localhost
 pepyatka_server_instances:
   - 3000
@@ -15,9 +12,17 @@ nginx_client_max_body_size: '10M'
 nginx_use_proxy_protocol: False
 nginx_proxy_protocol_real_ips: []
 pepyatka_ga_account: "UA-XXXXXX"
-pepyatka_lite_enabled: False
+pepyatka_html_enabled: True
+pepyatka_html_repo: https://github.com/pepyatka/pepyatka-html.git
+pepyatka_html_branch: master
+pepyatka_html_hostname: localhost
 freefeed_react_client_enabled: False
 freefeed_react_client_repo: https://github.com/freefeed/freefeed-react-client.git
 freefeed_react_client_branch: master
+freefeed_react_client_hostname: localhost
+pepyatka_lite_enabled: False
+pepyatka_lite_repo: https://github.com/freefeed/freefeed-lite.git
+pepyatka_lite_branch: master
+pepyatka_lite_hostname: localhost
 pepyatka_local_storage_whoami_cache_key: whoamiCache
 freefeed_recaptcha_sitekey: ""

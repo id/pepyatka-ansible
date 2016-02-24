@@ -1,0 +1,15 @@
+[target]
+candy.freefeed.net
+
+[pepyatka:children]
+target
+
+[nginx:children]
+target
+
+[staging:children]
+target
+
+[staging_secrets:children]
+target
+
