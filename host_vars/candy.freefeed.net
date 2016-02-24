@@ -1,6 +1,6 @@
 ---
 
-pepyatka_ansible_branch: add-candy-server
+pepyatka_ansible_branch: development
 pepyatka_hostname: candy.freefeed.net
 pepyatka_media_hostname: micropeppa-media.freefeed.net
 pepyatka_statsd_prefix: candy
