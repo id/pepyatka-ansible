@@ -15,11 +15,16 @@
       tags:
         - bootstrap
 
-    - name: Install ansible
-      pip: name={{ item }} state=present
+    - name: Install required python modules
+      pip: name={{ item }} state=latest
       with_items:
-        - ansible
+        - dogapi
         - httplib2
+      tags:
+        - bootstrap
+
+    - name: Install ansible
+      pip: name=ansible state=present version=1.9.4
       tags:
         - bootstrap
 
@@ -47,6 +52,7 @@
         dest: /root/pepyatka-html
         version: "{{ pepyatka_html_branch }}"
         force: yes
+      when: pepyatka_html_enabled
       tags:
         - bootstrap
 

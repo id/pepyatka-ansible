@@ -1,44 +1,4 @@
----
-
-- name: Check if pepyatka-lite repo already exists
-  stat: path=/var/www/pepyatka-lite/.git
-  register: pepyatka_lite_dir
-  tags:
-    - pepyatka
-    - nginx
-
-- name: Initial deploy of pepyatka-lite
-  git:
-    repo: "{{ pepyatka_lite_repo }}"
-    dest: /var/www/pepyatka-lite
-    version: "{{ pepyatka_lite_branch }}"
-  when: not pepyatka_lite_dir.stat.exists
-  register: pepyatka_lite_init
-  tags:
-    - pepyatka
-    - nginx
-
-- name: Get pepyatka-lite local version
-  command: chdir=/var/www/pepyatka-lite git rev-parse HEAD
-  register: pepyatka_lite_local_version
-  tags:
-    - pepyatka
-    - nginx
-
-- name: Fetch pepyatka-lite remote
-  command: chdir=/var/www/pepyatka-lite git fetch origin
-  tags:
-    - pepyatka
-    - nginx
-
-- name: Get pepyatka-lite version on remote
-  command: chdir=/var/www/pepyatka-lite git rev-parse origin/{{ pepyatka_lite_branch }}
-  register: pepyatka_lite_remote_version
-  tags:
-    - pepyatka
-    - nginx
-
-- name: Update pepyatka-lite
+- name: Deploy pepyatka-lite
   git:
     repo: "{{ pepyatka_lite_repo }}"
     update: yes
@@ -46,14 +6,13 @@
     version: "{{ pepyatka_lite_branch }}"
     force: yes
   register: pepyatka_lite
-  when: pepyatka_lite_local_version.stdout != pepyatka_lite_remote_version.stdout
   tags:
     - pepyatka
     - nginx
 
 - name: Save changelog in a file
-  shell: echo "{{ pepyatka_lite_local_version.stdout }}...{{ pepyatka_lite_remote_version.stdout }}" > /tmp/pepyatka-lite-changelog
-  when: pepyatka_lite_local_version.stdout != pepyatka_lite_remote_version.stdout
+  shell: echo "{{ pepyatka_lite.before }}...{{ pepyatka_lite.after }}" > /tmp/pepyatka-lite-changelog
+  when: pepyatka_lite.before != pepyatka_lite.after
   tags: pepyatka
 
 - name: Fetch pepyatka-lite changelog
@@ -61,7 +20,7 @@
     src=/tmp/pepyatka-lite-changelog
     dest=pepyatka-lite-changelog/{{ inventory_hostname }}
     flat=yes
-  when: pepyatka_lite_local_version.stdout != pepyatka_lite_remote_version.stdout
+  when: pepyatka_lite.before != pepyatka_lite.after
   tags: pepyatka
 
 - name: Deploy pepyatka-lite config
@@ -78,7 +37,7 @@
 
 - name: Kill local node_modules
   file: path=/var/www/pepyatka-lite/node_modules state=absent
-  when: pepyatka_lite | changed
+  when: pepyatka_lite.before != pepyatka_lite.after
   tags:
     - pepyatka
     - nginx

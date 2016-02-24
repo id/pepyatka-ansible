@@ -1,5 +1,5 @@
 [target]
-micropeppa.freefeed.net
+candy.freefeed.net
 
 [pepyatka:children]
 target
@@ -12,3 +12,4 @@ target
 
 [staging_secrets:children]
 target
+
