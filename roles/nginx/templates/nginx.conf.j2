@@ -77,7 +77,6 @@ http {
 {% endif %}
 {% endif %}
 
-
     server {
       server_name _;
       include pepyatka-ssl.conf;
@@ -138,11 +137,6 @@ http {
    }
 {% endif %}
 {% if freefeed_react_client_enabled %}
-   server {
-     server_name _;
-     include pepyatka-ssl.conf;
-     return 301 $scheme://{{ freefeed_react_client_hostname }}$request_uri;
-   }
    server {
      server_name {{ freefeed_react_client_hostname }};
      access_log /var/log/nginx/{{ freefeed_react_client_hostname }}.log {{ nginx_use_proxy_protocol | ternary('elb_log', 'main') }};
