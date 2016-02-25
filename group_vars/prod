@@ -1,6 +1,7 @@
 ---
 
 pepyatka_hostname: freefeed.net
+pepyatka_html_hostname: freefeed.net
 pepyatka_media_hostname: media.freefeed.net
 pepyatka_statsd_prefix: freefeed
 pepyatka_server_branch: release

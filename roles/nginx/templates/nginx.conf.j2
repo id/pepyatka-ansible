@@ -101,39 +101,39 @@ http {
        add_header Access-Control-Allow-Methods 'GET,HEAD' always;
      }
    }
-    # must be first ssl block
+
 {% if pepyatka_html_enabled %}
-    server {
-      server_name {{ pepyatka_html_hostname }};
-      access_log /var/log/nginx/{{ pepyatka_html_hostname }}.log {{ nginx_use_proxy_protocol | ternary('elb_log', 'main') }};
-      include pepyatka-common.conf;
+   server {
+     server_name {{ pepyatka_html_hostname }};
+     access_log /var/log/nginx/{{ pepyatka_html_hostname }}.log {{ nginx_use_proxy_protocol | ternary('elb_log', 'main') }};
+     include pepyatka-common.conf;
 
-      location ~ ^/(css|js|img|fonts)/.*$ {
-        root /var/www/pepyatka-html/public;
-        access_log off;
-        expires max;
-        try_files $uri $uri/ /index.html?/$request_uri;
-      }
+     location ~ ^/(css|js|img|fonts)/.*$ {
+       root /var/www/pepyatka-html/public;
+       access_log off;
+       expires max;
+       try_files $uri $uri/ /index.html?/$request_uri;
+     }
 
-      location / {
-        root /var/www/pepyatka-html/public;
-        access_log off;
-        expires off;
-        try_files $uri $uri/ /index.html?/$request_uri;
-      }
-    }
+     location / {
+       root /var/www/pepyatka-html/public;
+       access_log off;
+       expires off;
+       try_files $uri $uri/ /index.html?/$request_uri;
+     }
+   }
 {% endif %}
 {% if pepyatka_lite_enabled %}
-    server {
-      server_name {{ pepyatka_lite_hostname }};
-      access_log /var/log/nginx/{{ pepyatka_lite_hostname }}.log {{ nginx_use_proxy_protocol | ternary('elb_log', 'main') }};
-      include pepyatka-common.conf;
+   server {
+     server_name {{ pepyatka_lite_hostname }};
+     access_log /var/log/nginx/{{ pepyatka_lite_hostname }}.log {{ nginx_use_proxy_protocol | ternary('elb_log', 'main') }};
+     include pepyatka-common.conf;
 
-      location / {
-        root /var/www/pepyatka-lite;
-        rewrite ^/s/(.*)$ /$1 break;
-        rewrite ^.* /index.htm break;
-      }
+     location / {
+       root /var/www/pepyatka-lite;
+       rewrite ^/s/(.*)$ /$1 break;
+       rewrite ^.* /index.htm break;
+     }
    }
 {% endif %}
 {% if freefeed_react_client_enabled %}
