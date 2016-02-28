@@ -35,25 +35,25 @@ exports.getConfig = function() {
     recaptcha: {
       enabled: {{ freefeed_recaptcha_enabled | string | lower }},
       secret: '{{ freefeed_recaptcha_secret }}'
-    }
+    },
+
+    frontendPreferencesLimit: 65536
   }
 
   config.host = '{{ pepyatka_frontend_scheme }}://{{ pepyatka_hostname }}'
 
-  var defaultStopList = [
-    'anonymous', 'public', 'about', 'signin', 'logout',
-    'signup', 'filter', 'settings', 'account', 'groups',
-    'friends', 'list', 'search', 'summary', 'share', '404',
-    'iphone', 'attachments', 'files', 'profilepics'
-  ];
-
-  var bannedUsers = fs.readFileSync('{{ pepyatka_home_dir }}/pepyatka-server/config/banlist.txt').toString()
-                      .split("\n")
-                      .filter(function(n) { return n != '' })
+  var extraStopList = fs.readFileSync('{{ pepyatka_home_dir }}/pepyatka-server/config/banlist.txt')
+    .toString()
+    .split('\n')
+    .filter(function(n) { return n != '' })
 
   config.application = {
-    DEFAULT_STOP_LIST: defaultStopList,
-    USERNAME_STOP_LIST: defaultStopList.concat(bannedUsers)
+    USERNAME_STOP_LIST: [
+      '404', 'about', 'account', 'anonymous', 'attachments', 'files', 'filter',
+      'friends', 'groups', 'help', 'home', 'iphone', 'list', 'logout', 'profilepics',
+      'public', 'requests', 'search', 'settings', 'share', 'signin', 'signup', 'summary'
+    ],
+    EXTRA_STOP_LIST: extraStopList
   }
 
   config.media = {
