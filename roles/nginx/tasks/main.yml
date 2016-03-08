@@ -1,9 +1,6 @@
 ---
 # file: nginx/tasks/main.yml
 
-- fail: msg="Nginx role is only supported for Ubuntu"
-  when: ansible_distribution != 'Ubuntu'
-
 - name: Ensure git is installed
   apt: name=git state=present
   tags:

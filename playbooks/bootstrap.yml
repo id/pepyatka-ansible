@@ -12,6 +12,8 @@
         - python-pip
         - python-dev
         - git
+        - apt-transport-https
+        - sudo
       tags:
         - bootstrap
 
