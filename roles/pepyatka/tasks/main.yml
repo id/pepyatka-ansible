@@ -101,22 +101,20 @@
   template: src=logrotate.j2 dest=/etc/logrotate.d/pepyatka
   tags: pepyatka
 
-- name: Check if pepyatka is up and running
-  wait_for: host=localhost port={{ item }} timeout=1 state=started
-  with_items: pepyatka_server_instances
-  register: pepyatka_running
+- name: Run systemctl daemon-reload
+  command: systemctl daemon-reload
   tags: pepyatka
 
 - name: Start pepyatka-server instances
-  service: name={{ item }}@pepyatka.service state=started enabled=yes
+  service: name="pepyatka@{{ item }}.service" state=started enabled=yes
   with_items: pepyatka_server_instances
-  when: not pepyatka_running
+  register: started_pepyatka
   tags: pepyatka
 
 - name: Restart pepyatka-server instances
-  service: name={{ item }}@pepyatka.service state=restarted
+  service: name="pepyatka@{{ item }}.service" state=restarted
   with_items: pepyatka_server_instances
-  when: pepyatka_running and (pepyatka_server.before != pepyatka_server.after)
+  when: pepyatka_server is defined and (pepyatka_server.before != pepyatka_server.after)
   tags: pepyatka
 
 - name: Ensure pepyatka is up and running

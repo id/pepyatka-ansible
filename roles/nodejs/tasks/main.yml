@@ -12,11 +12,10 @@
 
 - name: Install NodeJS packages
   apt: name=nodejs state=latest force=yes update_cache=yes
-  with_items:
-    - nodejs
-    - npm
   tags:
     - nodejs
 
 - name: Update alternatives
   alternatives: name=node path=/usr/bin/nodejs link=/usr/bin/node
+  tags:
+    - nodejs
