@@ -15,6 +15,6 @@ pepyatka_deploy_inventory=dev
 pepyatka_ansible_repo=https://github.com/pepyatka/pepyatka-ansible.git
 pepyatka_ansible_branch=master
 pepyatka_server_repo=https://github.com/pepyatka/pepyatka-server.git
-pepyatka_server_branch=development
+pepyatka_server_branch=unstable
 pepyatka_html_repo=https://github.com/pepyatka/pepyatka-html.git
 pepyatka_html_branch=development
