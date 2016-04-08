@@ -18,7 +18,7 @@ pepyatka_html_branch: master
 pepyatka_html_hostname: localhost
 freefeed_react_client_enabled: False
 freefeed_react_client_repo: https://github.com/freefeed/freefeed-react-client.git
-freefeed_react_client_branch: master
+freefeed_react_client_branch: unstable
 freefeed_react_client_hostname: localhost
 pepyatka_lite_enabled: False
 pepyatka_lite_repo: https://github.com/freefeed/freefeed-lite.git

@@ -54,6 +54,19 @@
     regexp: "siteKey.*"
     replace: "siteKey: '{{ freefeed_recaptcha_sitekey }}',"
 
+- name: Read bookmarklet.min.js from Ember client
+  shell: cat /var/www/pepyatka-html/public/js/bookmarklet.min.js
+  register: bookmarklet_min_js_content
+  changed_when: false
+  ignore_errors: yes
+
+- name: Populate BOOKMARKLET_PLACEHOLDER
+  replace:
+    dest: /var/www/freefeed-react-client/src/components/sidebar.jsx
+    regexp: "BOOKMARKLET_PLACEHOLDER"
+    replace: "{{ bookmarklet_min_js_content.stdout }}"
+  ignore_errors: yes
+
 - name: Install webpack globally
   npm: name=webpack state=latest global=yes
 
