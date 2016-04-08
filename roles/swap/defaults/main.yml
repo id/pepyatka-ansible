@@ -1,0 +1,5 @@
+---
+
+swap_bs: 2048
+swap_count: 1048576
+swap_file: /mnt/swap

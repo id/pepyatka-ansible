@@ -17,7 +17,6 @@ Environment=PEPYATKA_SERVER_PORT=%I
 Environment=LOG_DIR=/var/log/pepyatka
 Environment=MONITOR_PREFIX={{ pepyatka_statsd_prefix }}
 ExecStart=/usr/bin/npm start
-ExecStop=/usr/bin/npm stop
 
 [Install]
 WantedBy=pepyatka.target

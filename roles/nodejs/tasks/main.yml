@@ -19,3 +19,4 @@
   alternatives: name=node path=/usr/bin/nodejs link=/usr/bin/node
   tags:
     - nodejs
+
