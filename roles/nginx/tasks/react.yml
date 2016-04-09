@@ -67,18 +67,6 @@
     replace: "{{ bookmarklet_min_js_content.stdout }}"
   ignore_errors: yes
 
-- name: Copy bookmarklet-popup.js from Ember client
-  command: cp /var/www/pepyatka-html/public/js/bookmarklet-popup.js /var/www/freefeed-react-client/public/
-  register: bookmarklet_popup_js
-  changed_when: false
-  ignore_errors: yes
-
-- name: Replace host in bookmarklet-popup.js
-  replace:
-    dest: /var/www/freefeed-react-client/public/bookmarklet-popup.js
-    regexp: "\+ host \+"
-    replace: "+ {{ pepyatka_frontend_scheme }}://{{ pepyatka_html_hostname }} + "
-
 - name: Install webpack globally
   npm: name=webpack state=latest global=yes
 
@@ -93,6 +81,18 @@
   command: make prod out_dir=/var/www/freefeed-react-client/public
   args:
     chdir: /var/www/freefeed-react-client
+
+- name: Copy bookmarklet-popup.js from Ember client
+  command: cp /var/www/pepyatka-html/public/js/bookmarklet-popup.js /var/www/freefeed-react-client/public/
+  register: bookmarklet_popup_js
+  ignore_errors: yes
+
+- name: Replace host in bookmarklet-popup.js
+  replace:
+    dest: /var/www/freefeed-react-client/public/bookmarklet-popup.js
+    regexp: "\\+ host \\+"
+    replace: "+ '{{ pepyatka_frontend_scheme }}://{{ pepyatka_html_hostname }}' +"
+  when: bookmarklet_popup_js | changed
 
 - name: Fix freefeed-react-client permissions
   file:
