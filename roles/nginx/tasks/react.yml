@@ -82,6 +82,21 @@
   args:
     chdir: /var/www/freefeed-react-client
 
+- name: Ensure /var/www/freefeed-react-client/public/js
+  file: path=/var/www/freefeed-react-client/public/js state=directory
+
+- name: Copy bookmarklet-popup.js from Ember client
+  command: cp /var/www/pepyatka-html/public/js/bookmarklet-popup.js /var/www/freefeed-react-client/public/js/
+  register: bookmarklet_popup_js
+  ignore_errors: yes
+
+- name: Replace host in bookmarklet-popup.js
+  replace:
+    dest: /var/www/freefeed-react-client/public/js/bookmarklet-popup.js
+    regexp: "\\+ host \\+"
+    replace: "+ '{{ pepyatka_frontend_scheme }}://{{ pepyatka_html_hostname }}' +"
+  when: bookmarklet_popup_js | changed
+
 - name: Fix freefeed-react-client permissions
   file:
     path: /var/www/freefeed-react-client
