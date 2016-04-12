@@ -59,7 +59,7 @@ http {
       return         301 http://freefeed.net/freefeed;
     }
 
-{% if freefeed_beta_redirect %}
+{% if freefeed_beta_redirect is defined and freefeed_beta_redirect %}
     server {
       listen         80 {{ nginx_use_proxy_protocol | ternary('proxy_protocol', '') }};
       server_name    beta.freefeed.net;
