@@ -63,7 +63,7 @@
   replace:
     dest: /var/www/pepyatka-html/public/index.html
     regexp: "v=.*"
-    replace: "v={{ pepyatka_html_remote_version.stdout }}\""
+    replace: "v={{ pepyatka_html.after }}\""
   when: pepyatka_html.before != pepyatka_html.after
   tags:
     - pepyatka

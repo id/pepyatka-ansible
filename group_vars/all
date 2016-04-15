@@ -1,6 +1,5 @@
 ---
 
-ansible_ssh_user: ubuntu
 pepyatka_service_name: FreeFeed
 vault_password_file: pepyatka.vault
 
