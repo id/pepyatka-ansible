@@ -68,6 +68,14 @@
   register: pepyatka_banlist
   tags: pepyatka
 
+- name: Deploy knex config
+  template:
+    src: knexfile.js.j2
+    dest: "{{ pepyatka_home_dir }}/pepyatka-server/knexfile.js"
+    owner: "{{ pepyatka_user }}"
+    group: "{{ pepyatka_group }}"
+  tags: pepyatka
+
 - name: Create directories for attachments, thumbnails and profile pictures
   file:
     path: "{{ pepyatka_files_dir }}/{{ item }}"
