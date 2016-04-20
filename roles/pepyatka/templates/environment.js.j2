@@ -1,4 +1,4 @@
-"use strict";
+import {production as postgresConfig} from '../../knexfile'
 
 var fs = require('fs')
 var nodemailer = require('nodemailer')
@@ -127,6 +127,8 @@ exports.getConfig = function() {
       max_attempts: 2
     }
   }
+
+  config.postgres = postgresConfig
 
   return config
 }
