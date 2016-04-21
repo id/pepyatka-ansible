@@ -15,7 +15,7 @@ location = /favicon.ico {
 
 # Disable logging for robots.txt
 location = /robots.txt {
-  return 200 "User-agent: *\nDisallow:\n";
+  return 200 "User-agent: *\nDisallow: /";
   log_not_found off;
   access_log off;
 }
