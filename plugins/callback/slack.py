@@ -121,7 +121,7 @@ class CallbackModule(CallbackBase):
         self.playbook_name = os.path.basename(playbook._file_name)
 
         title = [
-            'Ansible playbook %s started on %s' % (playbook._file_name, socket.gethostname()))
+            'Ansible playbook %s started on %s' % (playbook._file_name, socket.gethostname())
         ]
         invocation_items = []
         if self._options and self.show_invocation:
