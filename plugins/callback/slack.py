@@ -166,19 +166,7 @@ class CallbackModule(CallbackBase):
         self.send_msg(attachments=attachments)
 
     def v2_playbook_on_play_start(self, play):
-        """Display Play start messages"""
-
-        name = play.name or 'Play name not specified (%s)' % play._uuid
-        msg = '*Starting play* (_%s_)\n\n*%s*' % (self.guid, name)
-        attachments = [
-            {
-                'fallback': msg,
-                'text': msg,
-                'color': 'warning',
-                'mrkdwn_in': ['text', 'fallback', 'fields'],
-            }
-        ]
-        self.send_msg(attachments=attachments)
+        pass
 
     def v2_runner_on_failed(self, result, ignore_errors=False):
         msg = 'Task failed: %s' % (result._result)
