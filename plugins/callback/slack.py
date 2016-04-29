@@ -31,6 +31,7 @@ from ansible.plugins.callback import CallbackBase
 import json
 import os
 import uuid
+import socket
 
 SLACK_INCOMING_WEBHOOK = 'https://hooks.slack.com/services/%s'
 
@@ -120,7 +121,7 @@ class CallbackModule(CallbackBase):
         self.playbook_name = os.path.basename(playbook._file_name)
 
         title = [
-            '*Playbook initiated* (_%s_)' % self.guid
+            'Ansible playbook %s started on %s' % (playbook._file_name, socket.gethostname()))
         ]
         invocation_items = []
         if self._options and self.show_invocation:
