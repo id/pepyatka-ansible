@@ -26,3 +26,4 @@ pepyatka_lite_branch: master
 pepyatka_lite_hostname: localhost
 pepyatka_local_storage_whoami_cache_key: whoamiCache
 freefeed_recaptcha_sitekey: ""
+vanilla_lead_domain: localhost
