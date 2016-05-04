@@ -2,6 +2,7 @@
 
 pepyatka_ansible_branch: development
 pepyatka_lite_branch: development
+vanilla_lead_domain: micropeppa
 pepyatka_redis_host: pepyatka-micro.gfaoo9.0001.euw1.cache.amazonaws.com
 pepyatka_s3_bucket: freefeed-storage-test
 freefeed_recaptcha_enabled: false
