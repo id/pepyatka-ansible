@@ -28,6 +28,7 @@
         - dogapi
         - httplib2
         - ansible
+        - markupsafe
       tags:
         - bootstrap
 
