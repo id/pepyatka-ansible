@@ -1,6 +1,6 @@
 {% if server_cert is defined %}
-listen 443 ssl spdy {{ nginx_use_proxy_protocol | ternary('proxy_protocol', '') }};
-listen [::]:443 ssl spdy {{ nginx_use_proxy_protocol | ternary('proxy_protocol', '') }};
+listen 443 ssl http2 {{ nginx_use_proxy_protocol | ternary('proxy_protocol', '') }};
+listen [::]:443 ssl http2 {{ nginx_use_proxy_protocol | ternary('proxy_protocol', '') }};
 add_header Strict-Transport-Security "max-age=31536000";
 ssl on;
 ssl_certificate /etc/nginx/ssl/api.pepyatka.crt;
