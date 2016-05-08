@@ -95,24 +95,28 @@
   tags:
     - pepyatka
     - nginx
+    - nginx-config
 
 - name: Deploy nginx common config
   template: src=pepyatka-common.conf.j2 dest=/etc/nginx/pepyatka-common.conf
   tags:
     - pepyatka
     - nginx
+    - nginx-config
 
 - name: Deploy nginx shared config
   template: src=pepyatka-shared.conf.j2 dest=/etc/nginx/pepyatka-shared.conf
   tags:
     - pepyatka
     - nginx
+    - nginx-config
 
 - name: Deploy nginx ssl config
   template: src=pepyatka-ssl.conf.j2 dest=/etc/nginx/pepyatka-ssl.conf
   tags:
     - pepyatka
     - nginx
+    - nginx-config
 
 - name: Deploy dhparams.pem
   copy: content="{{ nginx_ssl_dhparam }}" dest=/etc/ssl/dhparams.pem
@@ -120,22 +124,26 @@
   tags:
     - pepyatka
     - nginx
+    - nginx-config
 
 - name: Start and enable nginx
   service: name=nginx state=started enabled=yes
   tags:
     - pepyatka
     - nginx
+    - nginx-config
 
 - name: Reload nginx config
   command: /etc/init.d/nginx reload
   tags:
     - pepyatka
     - nginx
+    - nginx-config
 
 - name: Ensure nginx is up and running
   wait_for: host=localhost port={{ server_cert is defined | ternary(443, 80) }} timeout=30 state=started
   tags:
     - pepyatka
     - nginx
+    - nginx-config
 
