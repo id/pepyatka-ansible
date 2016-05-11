@@ -1,115 +1,245 @@
-import uuid
+# (C) 2014-2015, Matt Martz <matt@sivel.net>
+# (C) 20016, Ivan Dyachkov <ivan@dyachkov.org>
+
+# This file is part of Ansible
+#
+# Ansible is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Ansible is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
+try:
+    from __main__ import cli
+except ImportError:
+    cli = None
+
+from ansible.constants import mk_boolean
+from ansible.module_utils.urls import open_url
+from ansible.plugins.callback import CallbackBase
+
 import json
 import os
+import uuid
 import socket
-import requests
 
 SLACK_INCOMING_WEBHOOK = 'https://hooks.slack.com/services/%s'
-SLACK_TOKEN = os.getenv('SLACK_TOKEN')
-SLACK_CHANNEL = os.getenv('SLACK_CHANNEL', '#ansible')
-SLACK_USERNAME = os.getenv('SLACK_USERNAME', 'ansible')
 
-def send_info(title, details=None, host=None):
-    do_send(title, host, details, ':ghost:', 'good')
+try:
+    import prettytable
+    HAS_PRETTYTABLE = True
+except ImportError:
+    HAS_PRETTYTABLE = False
 
-def send_error(title, host=None, details=None):
-    do_send(title, host, details, ':japanese_goblin:', 'danger')
+class CallbackModule(CallbackBase):
+    """This is an ansible callback plugin that sends status
+    updates to a Slack channel during playbook execution.
 
-def pretty_print(data):
-    return json.dumps(data, sort_keys=True, indent=4)
+    This plugin makes use of the following environment variables:
+        SLACK_TOKEN       (required): Slack Webhook URL
+        SLACK_CHANNEL     (optional): Slack room to post in. Default: #ansible
+        SLACK_USERNAME    (optional): Username to post as. Default: ansible
+        SLACK_INVOCATION  (optional): Show command line invocation
+                                      details. Default: False
 
-def do_send(title, host, details, icon, color):
-    if SLACK_TOKEN is None or SLACK_TOKEN == '':
-        return
-    msg = [title]
-    if host is not None:
-        msg.append('\nhost: %s' % host)
-    if details is not None:
-        msg.append('\n%s' % details)
-    msg = ' '.join(msg)
-    payload = dict(attachments=[dict(
-        fields=[dict(value=msg)],
-        fallback=msg,
-        color=color,
-        author_icon=icon,
-        mrkdwn_in=['text', 'fallback', 'fields'])])
-    payload['icon_emoji'] = icon
-    payload['color'] = color
-    payload['channel'] = SLACK_CHANNEL
-    payload['username'] = SLACK_USERNAME
-    data = json.dumps(payload)
-    webhook_url = SLACK_INCOMING_WEBHOOK % (SLACK_TOKEN)
-    response = requests.post(webhook_url, data=data)
-    if response.status_code not in (200, 201):
-        print 'Could not submit message to Slack: {0}'.format(response.text)
+    Requires:
+        prettytable
 
-class CallbackModule(object):
-    def runner_on_failed(self, host, res, ignore_errors=False):
-        send_error(
-            title='Ansible failed',
-            details=res)
+    """
+    CALLBACK_VERSION = 2.0
+    CALLBACK_TYPE = 'notification'
+    CALLBACK_NAME = 'slack'
+    CALLBACK_NEEDS_WHITELIST = True
 
-    def runner_on_ok(self, host, res):
+    def __init__(self):
+
+        self.disabled = False
+
+        if cli:
+            self._options = cli.options
+        else:
+            self._options = None
+
+        super(CallbackModule, self).__init__()
+
+        if not HAS_PRETTYTABLE:
+            #self.disabled = True
+            self._display.warning('The `prettytable` python module is not '
+                                  'installed. Disabling the Slack callback '
+                                  'plugin.')
+
+        self.token = os.getenv('SLACK_TOKEN')
+        self.channel = os.getenv('SLACK_CHANNEL', '#ansible')
+        self.username = os.getenv('SLACK_USERNAME', 'ansible')
+        self.show_invocation = mk_boolean(
+            os.getenv('SLACK_INVOCATION', self._display.verbosity > 1)
+        )
+
+        if self.token is None:
+            #self.disabled = True
+            self._display.warning('Slack token was not provided. The '
+                                  'Slack token can be provided using '
+                                  'the `SLACK_TOKEN` environment '
+                                  'variable.')
+
+        self.playbook_name = None
+
+        # This is a 6 character identifier provided with each message
+        # This makes it easier to correlate messages when there are more
+        # than 1 simultaneous playbooks running
+        self.guid = uuid.uuid4().hex[:6]
+
+    def send_msg(self, attachments):
+        payload = {
+            'channel': self.channel,
+            'username': self.username,
+            'attachments': attachments,
+            'parse': 'none'
+        }
+
+        data = json.dumps(payload)
+        self._display.debug(data)
+        try:
+            webhook_url = SLACK_INCOMING_WEBHOOK % (self.token)
+            response = open_url(webhook_url, data=data)
+            return response.read()
+        except Exception as e:
+            self._display.warning('Could not submit message to Slack: %s' %
+                                  str(e))
+
+    def v2_playbook_on_start(self, playbook):
+        self.playbook_name = os.path.basename(playbook._file_name)
+
+        title = [
+            'Ansible playbook %s started on %s' % (playbook._file_name, socket.gethostname())
+        ]
+        invocation_items = []
+        if self._options and self.show_invocation:
+            tags = self._options.tags
+            skip_tags = self._options.skip_tags
+            extra_vars = self._options.extra_vars
+            subset = self._options.subset
+            inventory = os.path.basename(
+                os.path.realpath(self._options.inventory)
+            )
+
+            invocation_items.append('Inventory:  %s' % inventory)
+            if tags and tags != 'all':
+                invocation_items.append('Tags:       %s' % tags)
+            if skip_tags:
+                invocation_items.append('Skip Tags:  %s' % skip_tags)
+            if subset:
+                invocation_items.append('Limit:      %s' % subset)
+            if extra_vars:
+                invocation_items.append('Extra Vars: %s' %
+                                        ' '.join(extra_vars))
+
+            title.append('by *%s*' % self._options.remote_user)
+
+        title.append('\n\n*%s*' % self.playbook_name)
+        msg_items = [' '.join(title)]
+        if invocation_items:
+            msg_items.append('```\n%s\n```' % '\n'.join(invocation_items))
+
+        msg = '\n'.join(msg_items)
+
+        attachments = [{
+            'fallback': msg,
+            'fields': [
+                {
+                    'value': msg
+                }
+            ],
+            'color': 'warning',
+            'mrkdwn_in': ['text', 'fallback', 'fields'],
+        }]
+
+        self.send_msg(attachments=attachments)
+
+    def v2_playbook_on_play_start(self, play):
         pass
 
-    def runner_on_error(self, host, msg):
-        pass
+    def v2_runner_on_failed(self, result, ignore_errors=False):
+        msg = 'Task failed: %s' % (result._result)
+        attachments = [
+            {
+                'fallback': msg,
+                'text': msg,
+                'color': 'error',
+                'mrkdwn_in': ['text', 'fallback', 'fields'],
+            }
+        ]
+        self.send_msg(attachments=attachments)
 
-    def runner_on_skipped(self, host, item=None):
-        pass
+    def v2_runner_item_on_failed(self, result, ignore_errors=False):
+        msg = 'Item failed: %s' % (result._result)
+        attachments = [
+            {
+                'fallback': msg,
+                'text': msg,
+                'color': 'error',
+                'mrkdwn_in': ['text', 'fallback', 'fields'],
+            }
+        ]
+        self.send_msg(attachments=attachments)
 
-    def runner_on_unreachable(self, host, res):
-        send_error(title='Ansible host unreachable: %s' % host)
+    def v2_playbook_on_stats(self, stats):
+        """Display info about playbook statistics"""
 
-    def runner_on_no_hosts(self):
-        pass
+        hosts = sorted(stats.processed.keys())
 
-    def runner_on_async_poll(self, host, res, jid, clock):
-        pass
+        t = prettytable.PrettyTable(['Host', 'Ok', 'Changed', 'Unreachable',
+                                     'Failures'])
 
-    def runner_on_async_ok(self, host, res, jid):
-        pass
+        failures = False
+        unreachable = False
 
-    def runner_on_async_failed(self, host, res, jid):
-        pass
+        for h in hosts:
+            s = stats.summarize(h)
 
-    def playbook_on_start(self):
-        send_info(
-            title='Ansible playbook %s started on %s' % (self.playbook.filename, socket.gethostname()))
+            if s['failures'] > 0:
+                failures = True
+            if s['unreachable'] > 0:
+                unreachable = True
 
-    def playbook_on_notify(self, host, handler):
-        pass
+            t.add_row([h] + [s[k] for k in ['ok', 'changed', 'unreachable',
+                                            'failures']])
 
-    def playbook_on_no_hosts_matched(self):
-        pass
+        attachments = []
+        msg_items = [
+            '*Playbook Complete* (_%s_)' % self.guid
+        ]
+        if failures or unreachable:
+            color = 'danger'
+            msg_items.append('\n*Failed!*')
+        else:
+            color = 'good'
+            msg_items.append('\n*Success!*')
 
-    def playbook_on_no_hosts_remaining(self):
-        pass
+        msg_items.append('```\n%s\n```' % t)
 
-    def playbook_on_task_start(self, name, is_conditional):
-        pass
+        msg = '\n'.join(msg_items)
 
-    def playbook_on_vars_prompt(self, varname, private=True, prompt=None, encrypt=None, confirm=False, salt_size=None, salt=None, default=None):
-        pass
+        attachments.append({
+            'fallback': msg,
+            'fields': [
+                {
+                    'value': msg
+                }
+            ],
+            'color': color,
+            'mrkdwn_in': ['text', 'fallback', 'fields']
+        })
 
-    def playbook_on_setup(self):
-        pass
+        self.send_msg(attachments=attachments)
 
-    def playbook_on_import_for_host(self, host, imported_file):
-        pass
-
-    def playbook_on_not_import_for_host(self, host, missing_file):
-        pass
-
-    def playbook_on_play_start(self, pattern):
-        pass
-
-    def playbook_on_stats(self, stats):
-        send_info(
-            title="Ansible play complete",
-            details="""total: {0}
-ok: {1}
-changed: {2}
-unreachable: {3}
-failed: {4}
-skipped: {5}""".format(stats.processed, stats.ok, stats.changed, stats.dark, stats.failures, stats.skipped))

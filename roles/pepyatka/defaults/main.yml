@@ -33,3 +33,8 @@ pepyatka_accept_hashed_passwords_only: 'false'
 pepyatka_banlist: ""
 freefeed_recaptcha_enabled: false
 freefeed_recaptcha_secret: ""
+postgres_host: localhost
+postgres_port: 5432
+postgres_dbname: freefeed
+postgres_user: postgres
+postgres_pass: postgres

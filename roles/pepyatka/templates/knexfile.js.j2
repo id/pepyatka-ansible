@@ -1,0 +1,21 @@
+module.exports = {
+
+  production: {
+    client: 'postgresql',
+    connection: {
+      host:     '{{postgres_host | string}}',
+      port:     {{postgres_port}},
+      database: '{{postgres_dbname | string}}',
+      user:     '{{postgres_user | string}}',
+      password: '{{postgres_pass | string}}'
+    },
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: 'knex_migrations'
+    }
+  }
+
+};

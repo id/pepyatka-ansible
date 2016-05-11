@@ -18,6 +18,7 @@ pepyatka_deploy_inventory: freefeed.net
 pepyatka_lite_enabled: true
 pepyatka_lite_branch: release
 pepyatka_lite_hostname: m.freefeed.net
+vanilla_lead_domain: FreeFeed
 nginx_restrict_users_ip: 136.243.23.88
 nginx_use_proxy_protocol: True
 nginx_proxy_protocol_real_ips:
@@ -29,4 +30,3 @@ pepyatka_auth_token_prefix: freefeed_
 freefeed_auth_token_prefix: freefeedBETA_
 freefeed_recaptcha_enabled: true
 freefeed_recaptcha_sitekey: 6LdChhITAAAAAGzgvUPPCbg0cxJzcxFc5vlBs9u5
-freefeed_beta_redirect: true

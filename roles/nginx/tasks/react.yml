@@ -95,7 +95,7 @@
     dest: /var/www/freefeed-react-client/public/js/bookmarklet-popup.js
     regexp: "\\+ host \\+"
     replace: "+ '{{ pepyatka_frontend_scheme }}://{{ pepyatka_html_hostname }}' +"
-  when: bookmarklet_popup_js | changed
+  when: bookmarklet_popup_js | success
 
 - name: Fix freefeed-react-client permissions
   file:

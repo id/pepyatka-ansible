@@ -59,14 +59,6 @@ http {
       return         301 http://freefeed.net/freefeed;
     }
 
-{% if freefeed_beta_redirect %}
-    server {
-      listen         80 {{ nginx_use_proxy_protocol | ternary('proxy_protocol', '') }};
-      server_name    beta.freefeed.net;
-      return         301 http://freefeed.net$request_uri;
-    }
-{% endif %}
-
 {% if server_cert is defined %}
 {% if pepyatka_html_enabled %}
     server {
