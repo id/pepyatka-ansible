@@ -4,7 +4,7 @@ pepyatka_ansible_branch: development
 pepyatka_hostname: candy.freefeed.net
 pepyatka_media_hostname: micropeppa-media.freefeed.net
 pepyatka_statsd_prefix: candy
-pepyatka_deploy_inventory: candy
+pepyatka_deploy_inventory: staging
 pepyatka_server_branch: stable
 pepyatka_html_enabled: false
 pepyatka_lite_enabled: false

@@ -1,5 +1,5 @@
 [target]
-candy.freefeed.net
+freefeed.net
 
 [pepyatka:children]
 target
@@ -7,9 +7,8 @@ target
 [nginx:children]
 target
 
-[staging:children]
+[prod:children]
 target
 
-[staging_secrets:children]
+[prod_secrets:children]
 target
-
