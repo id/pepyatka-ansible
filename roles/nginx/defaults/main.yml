@@ -27,3 +27,4 @@ pepyatka_lite_hostname: localhost
 pepyatka_local_storage_whoami_cache_key: whoamiCache
 freefeed_recaptcha_sitekey: ""
 vanilla_lead_domain: localhost
+sentry_dsn: 'https://0123456789abcdef0123456789abcdef@app.getsentry.com/12345'

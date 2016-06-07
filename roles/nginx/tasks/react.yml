@@ -54,6 +54,12 @@
     regexp: "siteKey.*"
     replace: "siteKey: '{{ freefeed_recaptcha_sitekey }}',"
 
+- name: Update Sentry DSN in src/config.js
+  replace:
+    dest: /var/www/freefeed-react-client/src/config.js
+    regexp: "publicDSN.*"
+    replace: "publicDSN: '{{ sentry_dsn }}',"
+
 - name: Read bookmarklet.min.js from Ember client
   shell: cat /var/www/pepyatka-html/public/js/bookmarklet.min.js
   register: bookmarklet_min_js_content

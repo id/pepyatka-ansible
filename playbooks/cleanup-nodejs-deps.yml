@@ -1,0 +1,12 @@
+---
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: Cleanup nodejs-related files
+      file: path="{{ item }}" state=absent
+      with_items:
+        - /opt/pepyatka/pepyatka-server/node_modules
+        - /var/www/freefeed-react-client/node_modules
+        - /var/www/pepyatka-html/node_modules
+        - /var/www/pepyatka-lite/node_modules

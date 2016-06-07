@@ -2,6 +2,7 @@
 
 pepyatka_service_name: FreeFeed
 vault_password_file: pepyatka.vault
+ansible_ssh_user: admin
 
 pepyatka_server_repo: https://github.com/freefeed/freefeed-server.git
 pepyatka_html_repo: https://github.com/freefeed/freefeed-html.git
