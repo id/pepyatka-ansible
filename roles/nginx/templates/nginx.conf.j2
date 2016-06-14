@@ -101,7 +101,7 @@ http {
        return https://{{ pepyatka_hostname }}/;
      }
      location / {
-       resolver 127.0.0.1 [::1] valid=30s;
+       resolver 169.254.169.253 valid=30s;
        access_log off;
        log_not_found off;
        expires max;
