@@ -29,8 +29,8 @@
     - pepyatka
     - nginx
 
-- name: Install webpack globally
-  npm: name=webpack state=latest global=yes
+- name: Install webpack
+  npm: path=/var/www/pepyatka-lite state=latest
   tags:
     - pepyatka
     - nginx
@@ -49,7 +49,11 @@
     - nginx
 
 - name: Build the bundle
-  command: chdir=/var/www/pepyatka-lite webpack --config config.js
+  environment:
+    ___BUILD___: "stable_{{ pepyatka_lite.after | truncate(8, True, '') }}"
+  command: ./node_modules/.bin/webpack --config config.js
+  args:
+    chdir: /var/www/pepyatka-lite
   tags:
     - pepyatka
     - nginx
