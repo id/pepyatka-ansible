@@ -1,5 +1,6 @@
 [target]
-freefeed.net
+micropeppa.freefeed.net
+candy.freefeed.net
 
 [redis:children]
 target
@@ -10,8 +11,8 @@ target
 [nginx:children]
 target
 
-[prod:children]
+[staging:children]
 target
 
-[prod_secrets:children]
+[staging_secrets:children]
 target

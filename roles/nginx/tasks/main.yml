@@ -29,6 +29,8 @@
 
 - include: pepyatka-lite.yml
   when: pepyatka_lite_enabled
+  tags:
+    - pepyatka-lite
 
 - name: Add apt key for the nginx repository
   apt_key: url="http://nginx.org/keys/nginx_signing.key" state=present

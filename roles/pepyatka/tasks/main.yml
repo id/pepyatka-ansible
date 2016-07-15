@@ -115,17 +115,17 @@
 
 - name: Start pepyatka-server instances
   service: name="pepyatka@{{ item }}.service" state=started enabled=yes
-  with_items: pepyatka_server_instances
+  with_items: "{{ pepyatka_server_instances }}"
   register: started_pepyatka
   tags: pepyatka
 
 - name: Restart pepyatka-server instances
   service: name="pepyatka@{{ item }}.service" state=restarted
-  with_items: pepyatka_server_instances
+  with_items: "{{ pepyatka_server_instances }}"
   when: pepyatka_server is defined and (pepyatka_server.before != pepyatka_server.after)
   tags: pepyatka
 
 - name: Ensure pepyatka is up and running
-  wait_for: host=localhost port={{ item }} timeout=30 state=started
-  with_items: pepyatka_server_instances
+  wait_for: host=localhost port="{{ item }}" timeout=30 state=started
+  with_items: "{{ pepyatka_server_instances }}"
   tags: pepyatka

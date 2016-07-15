@@ -132,6 +132,10 @@ http {
        access_log off;
        expires off;
        try_files $uri $uri/ /index.html?/$request_uri;
+{% if ember_client_basic_auth_enabled %}
+       auth_basic "Restricted Content";
+       auth_basic_user_file /etc/nginx/.htpasswd;
+{% endif %}
      }
    }
 {% endif %}
@@ -176,6 +180,10 @@ http {
      location / {
        access_log off;
        try_files $uri $uri/ /index.html?/$request_uri;
+{% if freefeed_react_client_basic_auth_enabled %}
+       auth_basic "Restricted Content";
+       auth_basic_user_file /etc/nginx/.htpasswd;
+{% endif %}
      }
 
      location ~ ^/assets/ {
