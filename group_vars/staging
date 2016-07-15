@@ -10,3 +10,5 @@ postgres_host: staging.cbfyifhnraxi.eu-west-1.rds.amazonaws.com
 postgres_port: 5432
 postgres_user: freefeed
 postgres_dbname: freefeed
+ember_client_basic_auth_enabled: True
+freefeed_react_client_basic_auth_enabled: True
