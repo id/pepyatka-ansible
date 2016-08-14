@@ -87,7 +87,6 @@
     dest: /var/www/freefeed-react-client/assets/js/bookmarklet-popup.js
     regexp: "\\+ host \\+"
     replace: "+ '{{ pepyatka_frontend_scheme }}://{{ pepyatka_html_hostname }}' +"
-  when: bookmarklet_popup_js | success
 
 - name: Read bookmarklet.min.js from Ember client
   shell: cat /var/www/freefeed-react-client/assets/js/bookmarklet.min.js
