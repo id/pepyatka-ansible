@@ -60,6 +60,21 @@
     regexp: "publicDSN.*"
     replace: "publicDSN: '{{ sentry_dsn }}',"
 
+- name: Install webpack globally
+  npm: name=webpack state=latest global=yes
+
+- name: Kill local node_modules
+  file: path=/var/www/freefeed-react-client/node_modules state=absent
+  when: freefeed_react_client.before != freefeed_react_client.after
+
+- name: Install freefeed-react-client dependencies
+  npm: path=/var/www/freefeed-react-client state=latest
+
+- name: Build assets
+  command: make prod out_dir=/var/www/freefeed-react-client/public
+  args:
+    chdir: /var/www/freefeed-react-client
+
 - name: Update server url in bookmarklet*.js
   replace:
     dest: "/var/www/freefeed-react-client/public/assets/js/{{ item }}"
@@ -84,21 +99,6 @@
     regexp: "BOOKMARKLET_PLACEHOLDER"
     replace: "{{ bookmarklet_min_js_content.stdout }}"
   ignore_errors: yes
-
-- name: Install webpack globally
-  npm: name=webpack state=latest global=yes
-
-- name: Kill local node_modules
-  file: path=/var/www/freefeed-react-client/node_modules state=absent
-  when: freefeed_react_client.before != freefeed_react_client.after
-
-- name: Install freefeed-react-client dependencies
-  npm: path=/var/www/freefeed-react-client state=latest
-
-- name: Build assets
-  command: make prod out_dir=/var/www/freefeed-react-client/public
-  args:
-    chdir: /var/www/freefeed-react-client
 
 - name: Replace host in bookmarklet-popup.js
   replace:
