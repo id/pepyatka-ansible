@@ -107,6 +107,9 @@
 - name: Ensure /var/www/freefeed-react-client/public/js
   file: path=/var/www/freefeed-react-client/public/js state=directory
 
+- name: Copy bookmarklet-popup.js to the legacy location
+  command: cp /var/www/freefeed-react-client/public/assets/js/bookmarklet-popup.js /var/www/freefeed-react-client/public/js/
+
 - name: Fix freefeed-react-client permissions
   file:
     path: /var/www/freefeed-react-client
